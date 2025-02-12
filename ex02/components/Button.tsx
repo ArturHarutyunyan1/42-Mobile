@@ -1,8 +1,9 @@
-import { View, Button, Text, StyleSheet, ViewStyle, TouchableOpacity } from "react-native";
+import { View, Button, Text, StyleSheet, ViewStyle, TouchableOpacity, TextStyle } from "react-native";
 
 type BtnProps = {
     title: string,
-    style?: ViewStyle
+    style?: ViewStyle,
+    textStyle?: TextStyle
 }
 
 export default function Btn(props: BtnProps)
@@ -10,7 +11,7 @@ export default function Btn(props: BtnProps)
     return (
         <TouchableOpacity style={StyleSheet.flatten([styles.button, props.style])}>
             <View>
-                <Text style={styles.text}>{props.title}</Text>
+                <Text style={StyleSheet.flatten([styles.text, props.textStyle])}>{props.title}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
     },
     text:
     {
-        fontSize: 36
+        fontSize: 36,
+        color: "#4E4D4D"
     }
 })
