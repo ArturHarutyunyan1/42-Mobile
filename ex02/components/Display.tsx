@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     components:
     {
         width: "90%",
-        height: "80%",
+        height: "90%",
         borderBottomWidth: 2,
         borderBottomColor: "black",
     },
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     {
         width: "100%",
         height: "50%",
-        paddingTop: 50,
+        // paddingTop: 50,
         justifyContent: "flex-start",
         alignItems: "flex-end"
     },
