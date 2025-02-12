@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Header from "@/components/header";
 import Display from "@/components/Display";
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   digit: {
     width: screenWidth * 0.20,
     height: (screenHeight * 0.5) / 5.5,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#e0e0e0",
     color: "#4E4D4D",
     justifyContent: "center",
     alignItems: "center",
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   operator:
   {
-    color: "#66FF7F"
+    color: "#4C6A92"
   },
   equal:
   {
