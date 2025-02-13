@@ -72,11 +72,20 @@ export const handlePress = (
             setInput('');
             setResult('');
         }
+        else if (value === 'C')
+        {
+            setInput(input.slice(0, -1));
+            setResult(input.slice(0, -1));
+        }
         else if (value === '=')
         {
             const result = calculateExpression(input).toString();
             setResult('');
             setInput(result);
+        }
+        else if (value == '+/-')
+        {
+            
         }
         else
         {

@@ -19,7 +19,7 @@ export default function Index() {
       <View style={styles.wrapper}>
         <Display input={input} result={result}></Display>
         <View style={styles.buttons}>
-          {["AC", "%", "/", "C", "7", "8", "9", "x", "4", "5", "6", "-", "1", "2", "3", "+", "+/-", "0", ".", "="].map(title => (
+          {["AC", "%", "/", "C", "7", "8", "9", "x", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="].map(title => (
             <Btn
               key={title}
               title={title}
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   equal:
   {
+    width: screenWidth * 0.42,
     backgroundColor: "#66FF7F",
     color: "white",
   }
