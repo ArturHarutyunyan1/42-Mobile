@@ -14,10 +14,10 @@ export default function Index() {
       <View style={styles.wrapper}>
         <Display></Display>
           <View style={styles.buttons}>
-            <Btn title="C" style={[styles.digit, styles.clear]} textStyle={styles.clear}></Btn>
+            <Btn title="AC" style={[styles.digit, styles.clear]} textStyle={styles.clear}></Btn>
             <Btn title="()" style={[styles.digit, styles.operator]} textStyle={styles.operator}></Btn>
-            <Btn title="%" style={[styles.digit, styles.operator]} textStyle={styles.operator}></Btn>
             <Btn title="/" style={[styles.digit, styles.operator]} textStyle={styles.operator}></Btn>
+            <Btn title="C" style={[styles.digit, styles.clear]} textStyle={styles.clear}></Btn>
             <Btn title="7" style={styles.digit}></Btn>
             <Btn title="8" style={styles.digit}></Btn>
             <Btn title="9" style={styles.digit}></Btn>
