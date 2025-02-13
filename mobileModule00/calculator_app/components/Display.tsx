@@ -1,10 +1,11 @@
 import { StyleSheet, View, Text } from "react-native";
 
 type displayProps = {
-    input: string
+    input: string,
+    result: string
 }
 
-export default function Display({input} : displayProps)
+export default function Display({input, result} : displayProps)
 {
     return (
         <View style={styles.display}>
@@ -13,7 +14,7 @@ export default function Display({input} : displayProps)
                     <Text style={styles.inputFont}>{input || '0'}</Text>
                 </View>
                 <View style={styles.result}>
-                    <Text style={styles.resultFont}>0</Text>
+                    <Text style={styles.resultFont}>{result || '0' }</Text>
                 </View>
             </View>
         </View>

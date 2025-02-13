@@ -11,18 +11,19 @@ const screenHeight = Dimensions.get("window").height;
 
 export default function Index() {
   const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
 
   return (
     <SafeAreaProvider>
       <Header></Header>
       <View style={styles.wrapper}>
-        <Display input={input}></Display>
+        <Display input={input} result={result}></Display>
         <View style={styles.buttons}>
-          {["AC", "()", "/", "C", "7", "8", "9", "*", "4", "5", "6", "-", "1", "2", "3", "+", "+/-", "0", ".", "="].map(title => (
+          {["AC", "%", "/", "C", "7", "8", "9", "x", "4", "5", "6", "-", "1", "2", "3", "+", "+/-", "0", ".", "="].map(title => (
             <Btn
               key={title}
               title={title}
-              onPress={() => handlePress(title, input, setInput)}
+              onPress={() => handlePress(title, input, setInput, setResult)}
               style={[styles.digit, title === "=" ? styles.equal : title === "C" || title === "AC" ? styles.clear : undefined]}
               textStyle={title === "=" || title === "C"}
             />
