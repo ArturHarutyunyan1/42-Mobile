@@ -1,6 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AppBar from "@/components/AppBar";
+import BottomBar from "@/components/BottomBar";
 import PagerView from "react-native-pager-view";
 import Today from "./today";
 import Weekly from "./weekly";
@@ -20,6 +21,7 @@ export default function Index() {
           <Weekly></Weekly>
         </View>
       </PagerView>
+      <BottomBar></BottomBar>
     </SafeAreaProvider>
   );
 }
