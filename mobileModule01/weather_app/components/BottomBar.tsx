@@ -2,20 +2,24 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendarDay, faCalendarWeek, faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
 
-export default function BottomBar() {
+type footerProps = {
+    onTabPress: (index: number) => void,
+}
+
+export default function BottomBar({onTabPress}: footerProps) {
     return (
         <View style={styles.wrapper}>
             <View style={styles.footer}>
                 <View style={styles.row}>
-                    <TouchableOpacity style={styles.rowItem}>
+                    <TouchableOpacity style={styles.rowItem} onPress={() => onTabPress(0)}>
                         <FontAwesomeIcon icon={faCalendarCheck} size={25} />
                         <Text style={styles.text}>Currently</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.rowItem}>
+                    <TouchableOpacity style={styles.rowItem} onPress={() => onTabPress(1)}>
                         <FontAwesomeIcon icon={faCalendarDay} size={25} />
                         <Text style={styles.text}>Today</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.rowItem}>
+                    <TouchableOpacity style={styles.rowItem} onPress={() => onTabPress(2)}>
                         <FontAwesomeIcon icon={faCalendarWeek} size={25} />
                         <Text style={styles.text}>Weekly</Text>
                     </TouchableOpacity>
