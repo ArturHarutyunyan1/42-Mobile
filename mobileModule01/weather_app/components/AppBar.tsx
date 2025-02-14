@@ -2,28 +2,34 @@ import { Stack } from "expo-router";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faLocationArrow } from '@fortawesome/free-solid-svg-icons';
 
-export default function AppBar()
-{
+export default function AppBar() {
     return (
         <SafeAreaView>
-            <Stack screenOptions={{headerShown: false}}></Stack>
+            <Stack screenOptions={{ headerShown: false }}></Stack>
             <Stack.Screen
-                    options={{
+                options={{
                     headerShown: false,
                     title: ""
-                    }}
+                }}
             />
             <View style={styles.container}>
                 <FontAwesomeIcon
                     icon={faMagnifyingGlass}
                     style={styles.icon}
+                    size={20}
                 />
                 <TextInput
                     placeholder="Search..."
                     style={styles.input}>
                 </TextInput>
+                <FontAwesomeIcon
+                    icon={faLocationArrow}
+                    size={25}
+                    style={{marginRight: 50}}
+                >
+                </FontAwesomeIcon>
             </View>
         </SafeAreaView>
     );
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
     },
     input:
     {
-        width: "100%",
+        width: "85%",
         height: 50,
         padding: 10,
         fontSize: 30
