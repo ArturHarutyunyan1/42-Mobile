@@ -24,8 +24,8 @@ export default function Index() {
       {showError && (
         <View
           style={{
-            position: "absolute",
-            top: 130,
+            position: "fixed",
+            top: 10,
             width: "100%",
             backgroundColor: "red",
             padding: 10,
