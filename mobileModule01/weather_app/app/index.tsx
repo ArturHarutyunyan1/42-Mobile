@@ -14,7 +14,7 @@ type pageProps = {
 export default function Index({cityName}: pageProps) {
   const [pageIndex, setPageIndex] = useState(0);
   const [name, setName] = useState("");
-  const pagerRef = useRef(null);
+  const pagerRef = useRef<PagerView>(null);
 
   const changePage = (index: number) => {
     setPageIndex(index);
@@ -31,7 +31,7 @@ export default function Index({cityName}: pageProps) {
       <PagerView
         ref={pagerRef}
         style={{ flex: 1 }}
-        onPageSelected={(e) => setPageIndex(e.nativeEvent.position)} // Track the current page index
+        onPageSelected={(e) => setPageIndex(e.nativeEvent.position)}
       >
         <View key="1" style={{justifyContent: "center", alignItems: "center"}}>
         <Text style={{fontSize: 50}}>{name || ""}</Text>

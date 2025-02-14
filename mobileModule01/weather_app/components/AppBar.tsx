@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { StyleSheet, View, Text, TextInput, Keyboard } from "react-native";
+import { StyleSheet, View, Text, TextInput, Keyboard, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faMagnifyingGlass, faLocationArrow } from '@fortawesome/free-solid-svg-icons';
@@ -39,12 +39,15 @@ export default function AppBar({setCityName}: handler) {
                     onSubmitEditing={handleSubmit}
                 >
                 </TextInput>
-                <FontAwesomeIcon
-                    icon={faLocationArrow}
-                    size={25}
-                    style={{marginRight: 50}}
-                >
-                </FontAwesomeIcon>
+                <TouchableOpacity
+                onPress={() => setCityName("Geolocation")}>
+                    <FontAwesomeIcon
+                        icon={faLocationArrow}
+                        size={25}
+                        style={{marginRight: 50}}
+                    >
+                    </FontAwesomeIcon>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
