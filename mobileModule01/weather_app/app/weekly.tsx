@@ -1,10 +1,15 @@
 import { View, Text } from "react-native";
 
-export default function Weekly()
+type pageProps = {
+    cityName?: string
+}
+
+export default function Weekly({cityName}: pageProps)
 {
     return (
-        <View>
-            <Text>Weekly</Text>
+        <View style={{justifyContent: "center", alignItems: "center"}}>
+            <Text style={{fontSize: 50}}>{cityName || ""}</Text>
+            <Text style={{fontSize: 50}}>Weekly</Text>
         </View>
     );
 }

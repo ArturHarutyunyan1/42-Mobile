@@ -5,12 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faMagnifyingGlass, faLocationArrow } from '@fortawesome/free-solid-svg-icons';
 import { useState } from "react";
 
-export default function AppBar() {
+type handler = {
+    setCityName: (name: string) => void;
+}
+
+export default function AppBar({setCityName}: handler) {
     const [message, sendMessage] = useState("");
 
     const handleSubmit = () => {
-        sendMessage("");
-        console.log(message);
+        setCityName(message);
         Keyboard.dismiss();
         
     }

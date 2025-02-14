@@ -1,11 +1,15 @@
 import { View, Text } from "react-native";
-import AppBar from "@/components/AppBar";
 
-export default function Today()
+type pageProps = {
+    cityName?: string
+}
+
+export default function Today({cityName}: pageProps)
 {
     return (
-        <View>
-            <Text>Today</Text>
+        <View style={{justifyContent: "center", alignItems: "center"}}>
+            <Text style={{fontSize: 50}}>{cityName || ""}</Text>
+            <Text style={{fontSize: 50}}>Today</Text>
         </View>
     );
 }
