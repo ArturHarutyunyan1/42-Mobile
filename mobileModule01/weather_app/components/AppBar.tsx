@@ -1,10 +1,19 @@
 import { Stack } from "expo-router";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faMagnifyingGlass, faLocationArrow } from '@fortawesome/free-solid-svg-icons';
+import { useState } from "react";
 
 export default function AppBar() {
+    const [message, sendMessage] = useState("");
+
+    const handleSubmit = () => {
+        sendMessage("");
+        console.log(message);
+        Keyboard.dismiss();
+        
+    }
     return (
         <SafeAreaView>
             <Stack screenOptions={{ headerShown: false }}></Stack>
@@ -22,7 +31,10 @@ export default function AppBar() {
                 />
                 <TextInput
                     placeholder="Search..."
-                    style={styles.input}>
+                    style={styles.input}
+                    onChangeText={sendMessage}
+                    onSubmitEditing={handleSubmit}
+                >
                 </TextInput>
                 <FontAwesomeIcon
                     icon={faLocationArrow}
