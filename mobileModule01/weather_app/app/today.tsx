@@ -5,8 +5,7 @@ export default function Today()
 {
     return (
         <View>
-            {/* <AppBar></AppBar> */}
-            <Text>Today Page</Text>
+            <Text>Today</Text>
         </View>
     );
 }

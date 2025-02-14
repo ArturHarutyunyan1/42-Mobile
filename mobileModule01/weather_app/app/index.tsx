@@ -9,15 +9,15 @@ export default function Index() {
   return (
     <SafeAreaProvider>
       <AppBar />
-      <PagerView style={{ flex: 1 }} initialPage={1}>
-      <View key="3" style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f5f5f5" }}>
-        <Weekly></Weekly>
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+      <View key="1">
+        <Text>Currently</Text>
         </View>
-        <View key="1" style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f5f5f5" }}>
-          <Text style={{ fontSize: 24 }}>Home Page</Text>
-        </View>
-        <View key="2" style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#e0e0e0" }}>
+        <View key="2">
           <Today></Today>
+        </View>
+        <View key="3">
+          <Weekly></Weekly>
         </View>
       </PagerView>
     </SafeAreaProvider>
