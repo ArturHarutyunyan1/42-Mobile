@@ -31,7 +31,9 @@ export default function AppBar({ setCityName }: Handler) {
       setIsSubmitted(true);
   
       try {
-        const apiUrl = `${GEOCODING_API}name=${encodeURIComponent(message)}`;
+        const apiUrl = `${GEOCODING_API}?name=${message}`;
+        console.log(apiUrl + "NIGGA");
+        
         console.log("Fetching:", apiUrl);
     
         const res = await fetch(apiUrl);
@@ -52,7 +54,7 @@ export default function AppBar({ setCityName }: Handler) {
       Keyboard.dismiss();
     };
     return (
-        <SafeAreaView>
+        <View style={{position: "fixed", top: 40, width: "100%", height: 120}}>
             <Stack screenOptions={{ headerShown: false }}></Stack>
             <Stack.Screen
                 options={{
@@ -84,11 +86,11 @@ export default function AppBar({ setCityName }: Handler) {
                 </TouchableOpacity>
             </View>
             {searchResults.length > 0 && searchResults.map(result => (
-                <View style={{width: "100%", height: "auto", padding: 10, backgroundColor: "red"}}>
+                <View key={result.longitude} style={{width: "100%", height: "auto", padding: 10, backgroundColor: "red"}}>
                     <Text>{result.name}</Text>
                 </View>
             ))}
-        </SafeAreaView>
+        </View>
     );
 }
 
