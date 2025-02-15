@@ -1,22 +1,56 @@
 import { Stack } from "expo-router";
-import { StyleSheet, View, Text, TextInput, Keyboard, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, Keyboard, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faMagnifyingGlass, faLocationArrow } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faMagnifyingGlass, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { GEOCODING_API } from "@env";
 
-type handler = {
-    setCityName: (name: string) => void;
+type Handler = {
+  setCityName: (name: string) => void;
+};
+
+interface LocationData {
+  name: string;
+  country?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
-export default function AppBar({setCityName}: handler) {
+export default function AppBar({ setCityName }: Handler) {
     const [message, sendMessage] = useState("");
-
-    const handleSubmit = () => {
-        setCityName(message);
-        Keyboard.dismiss();
-        
-    }
+    const [searchResults, setSearchResults] = useState<LocationData[]>([]);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+  
+    const handleSubmit = async () => {
+      if (!message.trim()) {
+        setSearchResults([]);
+        return;
+      }
+      
+      setIsSubmitted(true);
+  
+      try {
+        const apiUrl = `${GEOCODING_API}name=${encodeURIComponent(message)}`;
+        console.log("Fetching:", apiUrl);
+    
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error("Failed to fetch data");
+    
+        const jsonData = await res.json();
+    
+        if (jsonData.results && jsonData.results.length > 0) {
+          setSearchResults(jsonData.results);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.log("ERROR Occurred:", error);
+        setSearchResults([]);
+      }
+  
+      Keyboard.dismiss();
+    };
     return (
         <SafeAreaView>
             <Stack screenOptions={{ headerShown: false }}></Stack>
@@ -49,6 +83,11 @@ export default function AppBar({setCityName}: handler) {
                     </FontAwesomeIcon>
                 </TouchableOpacity>
             </View>
+            {searchResults.length > 0 && searchResults.map(result => (
+                <View style={{width: "100%", height: "auto", padding: 10, backgroundColor: "red"}}>
+                    <Text>{result.name}</Text>
+                </View>
+            ))}
         </SafeAreaView>
     );
 }
