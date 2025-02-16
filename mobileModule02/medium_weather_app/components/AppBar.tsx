@@ -87,15 +87,20 @@ export default function AppBar({ setCityName }: Handler) {
                 </TouchableOpacity>
             </View>
             <View style={styles.searchResult}>
-            {searchResults.length > 0 && searchResults.map(result => (
-              <TouchableOpacity>
-                <View key={result.longitude} style={styles.resultItem}>
-                    <Text style={{fontSize: 23}}>{result.name}</Text>
-                    <Text style={{fontSize: 18, color: "#ccc"}}>{result.country}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+              {searchResults.length > 0 && (
+                <FlatList
+                  data={searchResults}
+                  keyExtractor={(item) => `${item.longitude}-${item.latitude}`}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.resultItem} activeOpacity={0.7}>
+                      <Text style={styles.resultText}>{item.name}</Text>
+                      <Text style={styles.resultSubText}>{item.country}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              )}
             </View>
+
         </View>
     );
 }
@@ -126,21 +131,32 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 30
     },
-    searchResult:
-    {
+    searchResult: {
       width: "90%",
-      height: "auto",
+      height: 300,
       backgroundColor: "#fff",
-      padding: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 15,
       zIndex: 999,
-      margin: "auto",
+      marginHorizontal: "5%",
       marginTop: 10,
-      borderRadius: 20
+      borderRadius: 15,
+      elevation: 3,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
     },
-    resultItem:
-    {
-      width: "100%",
-      margin: "auto",
-      // height: 30,s
-    }
+    resultItem: {
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: "#eee",
+    },
+    resultText: {
+      fontSize: 18,
+      fontWeight: "600",
+    },
+    resultSubText: {
+      fontSize: 14,
+      color: "gray",
+    },
 })
