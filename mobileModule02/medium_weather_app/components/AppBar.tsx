@@ -81,15 +81,21 @@ export default function AppBar({ setCityName }: Handler) {
                         icon={faLocationArrow}
                         size={25}
                         style={{marginRight: 50}}
+                        color="royalblue"
                     >
                     </FontAwesomeIcon>
                 </TouchableOpacity>
             </View>
+            <View style={styles.searchResult}>
             {searchResults.length > 0 && searchResults.map(result => (
-                <View key={result.longitude} style={{width: "100%", height: "auto", padding: 10, backgroundColor: "red"}}>
-                    <Text>{result.name}</Text>
+              <TouchableOpacity>
+                <View key={result.longitude} style={styles.resultItem}>
+                    <Text style={{fontSize: 23}}>{result.name}</Text>
+                    <Text style={{fontSize: 18, color: "#ccc"}}>{result.country}</Text>
                 </View>
+              </TouchableOpacity>
             ))}
+            </View>
         </View>
     );
 }
@@ -97,11 +103,16 @@ export default function AppBar({ setCityName }: Handler) {
 const styles = StyleSheet.create({
     container:
     {
-        borderBottomWidth: 1,
+        width: "90%",
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: 10,
         paddingVertical: 5,
+        margin: "auto",
+        marginTop: 20,
+        backgroundColor: "#fff",
+        borderRadius: 15
+
     },
     icon:
     {
@@ -114,5 +125,22 @@ const styles = StyleSheet.create({
         height: 50,
         padding: 10,
         fontSize: 30
+    },
+    searchResult:
+    {
+      width: "90%",
+      height: "auto",
+      backgroundColor: "#fff",
+      padding: 10,
+      zIndex: 999,
+      margin: "auto",
+      marginTop: 10,
+      borderRadius: 20
+    },
+    resultItem:
+    {
+      width: "100%",
+      margin: "auto",
+      // height: 30,s
     }
 })
