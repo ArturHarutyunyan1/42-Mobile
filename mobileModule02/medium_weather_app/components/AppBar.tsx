@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
 import { StyleSheet, View, Text, TextInput, Keyboard, TouchableOpacity, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMagnifyingGlass, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { debounce } from "lodash";
 import { GEOCODING_API } from "@env";
 
 type Handler = {
@@ -13,36 +13,36 @@ type Handler = {
 interface LocationData {
   name: string;
   country?: string;
+  country_code?: string;
   latitude?: number;
   longitude?: number;
 }
 
 export default function AppBar({ setCityName }: Handler) {
-    const [message, sendMessage] = useState("");
-    const [searchResults, setSearchResults] = useState<LocationData[]>([]);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-  
-    const handleSubmit = async () => {
-      if (!message.trim()) {
+  const [message, sendMessage] = useState("");
+  const [searchResults, setSearchResults] = useState<LocationData[]>([]);
+  const [isSet, set] = useState(false);
+
+  const handleSubmit = useCallback(
+    debounce(async (query: string) => {
+      if (!query.trim()) {
         setSearchResults([]);
+        set(false);
         return;
       }
-      
-      setIsSubmitted(true);
-  
+
       try {
-        const apiUrl = `${GEOCODING_API}?name=${message}`;
-        console.log(apiUrl + "NIGGA");
-        
+        const apiUrl = `${GEOCODING_API}?name=${query}`;
         console.log("Fetching:", apiUrl);
-    
+
         const res = await fetch(apiUrl);
         if (!res.ok) throw new Error("Failed to fetch data");
-    
+
         const jsonData = await res.json();
-    
+
         if (jsonData.results && jsonData.results.length > 0) {
           setSearchResults(jsonData.results);
+          set(true);
         } else {
           setSearchResults([]);
         }
@@ -50,9 +50,14 @@ export default function AppBar({ setCityName }: Handler) {
         console.log("ERROR Occurred:", error);
         setSearchResults([]);
       }
-  
-      Keyboard.dismiss();
-    };
+    }, 500),
+    []
+  );
+
+  const handleInputChange = (text: string) => {
+    sendMessage(text);
+    handleSubmit(text);
+  };
     return (
         <View style={{position: "fixed", top: 40, width: "100%", height: 120}}>
             <Stack screenOptions={{ headerShown: false }}></Stack>
@@ -71,7 +76,7 @@ export default function AppBar({ setCityName }: Handler) {
                 <TextInput
                     placeholder="Search..."
                     style={styles.input}
-                    onChangeText={sendMessage}
+                    onChangeText={handleSubmit}
                     onSubmitEditing={handleSubmit}
                 >
                 </TextInput>
@@ -86,21 +91,22 @@ export default function AppBar({ setCityName }: Handler) {
                     </FontAwesomeIcon>
                 </TouchableOpacity>
             </View>
+            {isSet == true && searchResults.length > 0 && (
             <View style={styles.searchResult}>
-              {searchResults.length > 0 && (
                 <FlatList
                   data={searchResults}
                   keyExtractor={(item) => `${item.longitude}-${item.latitude}`}
                   renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.resultItem} activeOpacity={0.7}>
+                    <TouchableOpacity style={styles.resultItem} activeOpacity={0.7}
+                    onPress={() => setCityName(item.name)}
+                    >
                       <Text style={styles.resultText}>{item.name}</Text>
-                      <Text style={styles.resultSubText}>{item.country}</Text>
+                      <Text style={styles.resultSubText}>{item.country}, {item.country_code}</Text>
                     </TouchableOpacity>
                   )}
                 />
-              )}
             </View>
-
+              )}
         </View>
     );
 }
