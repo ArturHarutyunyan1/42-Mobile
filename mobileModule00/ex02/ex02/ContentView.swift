@@ -2,24 +2,22 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack(spacing: 0) {
-            Text("Calculator")
-                .font(.title)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, maxHeight: 50)
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                HStack (alignment: .top) {
+                    Text("Calculator")
+                        .font(.system(size: 32, weight: .medium))
+                        .foregroundStyle(.white)
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
                 .background(.blue)
-                .foregroundStyle(.white)
-
-            Text("Display")
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.3)
-                .background(.red)
-            Spacer()
-            Text("Digits")
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.56)
-                .background(.blue)
-
+                Spacer()
+                VStack {
+                    
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
