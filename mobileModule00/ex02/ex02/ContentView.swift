@@ -1,6 +1,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var value: String = "0"
+    @State private var result: Float = 0
+    
+    let buttons: [[String]] = [
+        ["clear", "plus.slash.minus", "percent", "divide"],
+        ["7", "8", "9", "multiply"],
+        ["4", "5", "6", "minus"],
+        ["1", "2", "3", "plus"],
+        ["delete.left","0", ".", "equal"]
+    ]
+    
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 0) {
@@ -11,11 +22,12 @@ struct ContentView: View {
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
                 .background(.blue)
+                
                 VStack () {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text("0")
+                        Text("\(value)")
                             .font(.system(size: 52, weight: .medium))
                             .padding(10)
                     }
@@ -24,6 +36,36 @@ struct ContentView: View {
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.3)
                 .background(.red)
+                
+                VStack {
+                    Spacer()
+                    ForEach(buttons, id: \.self) { row in
+                        HStack(spacing: 10) {
+                            ForEach(row, id: \.self) { btn in
+                                Button(action: {
+                                    print("\(btn)")
+                                }) {
+                                    if (Int(btn) != nil || btn == ".") {
+                                        Text(btn)
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 24))
+                                    } else {
+                                        Image(systemName: btn)
+                                            .foregroundStyle(.white)
+                                            .font(.system(size: 24))
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(.black)
+                                .cornerRadius(50)
+                            }
+                        }
+                        .frame(width: geometry.size.width * 0.9)
+                        .padding(3)
+                    }
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height * 0.6)
+                .background(.blue)
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

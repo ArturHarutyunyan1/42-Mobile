@@ -35,16 +35,6 @@
 			path = ex02;
 			sourceTree = "<group>";
 		};
-		F3B1A0332D65F47600830CAF /* ex02Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ex02Tests;
-			sourceTree = "<group>";
-		};
-		F3B1A03D2D65F47600830CAF /* ex02UITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ex02UITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				F3B1A0222D65F47500830CAF /* ex02 */,
-				F3B1A0332D65F47600830CAF /* ex02Tests */,
-				F3B1A03D2D65F47600830CAF /* ex02UITests */,
 				F3B1A0212D65F47500830CAF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +118,6 @@
 			dependencies = (
 				F3B1A0322D65F47600830CAF /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				F3B1A0332D65F47600830CAF /* ex02Tests */,
-			);
 			name = ex02Tests;
 			packageProductDependencies = (
 			);
@@ -152,9 +137,6 @@
 			);
 			dependencies = (
 				F3B1A03C2D65F47600830CAF /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				F3B1A03D2D65F47600830CAF /* ex02UITests */,
 			);
 			name = ex02UITests;
 			packageProductDependencies = (
