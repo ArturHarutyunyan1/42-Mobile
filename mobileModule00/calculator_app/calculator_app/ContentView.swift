@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var value: String = "0"
+    private let logic = CalculatorLogic()
     
     let buttons: [[String]] = [
         ["AC", "plus.slash.minus", "percent", "divide"],
