@@ -21,21 +21,21 @@ struct ContentView: View {
                         .foregroundStyle(.white)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.1)
-                .background(.blue)
-                
+                .background(Color.black)
                 VStack () {
                     Spacer()
                     HStack {
                         Spacer()
                         Text("\(value)")
-                            .font(.system(size: 52, weight: .medium))
+                            .font(.custom("Helvetica Neue", size: 52))
+                            .foregroundStyle(Color.white)
                             .padding(10)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(20)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.3)
-                .background(.red)
+                .background(Color.black)
                 
                 VStack {
                     Spacer()
@@ -47,16 +47,21 @@ struct ContentView: View {
                                 }) {
                                     if (Int(btn) != nil || btn == ".") {
                                         Text(btn)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .contentShape(Rectangle())
                                             .foregroundStyle(.white)
-                                            .font(.system(size: 24))
+                                            .font(.system(size: 28))
                                     } else {
                                         Image(systemName: btn)
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .contentShape(Rectangle())
                                             .foregroundStyle(.white)
-                                            .font(.system(size: 24))
+                                            .font(.system(size: 28))
                                     }
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .background(.black)
+                                .foregroundStyle(Color.white)
+                                .font(.system(size: 24, weight: .bold))
                                 .cornerRadius(50)
                             }
                         }
@@ -65,7 +70,7 @@ struct ContentView: View {
                     }
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height * 0.6)
-                .background(.blue)
+                .background(Color.gray)
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
