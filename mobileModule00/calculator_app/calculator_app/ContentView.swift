@@ -95,6 +95,39 @@ struct ContentView: View {
                     }
                 }
             }
+        case "percent":
+            if value != "0" {
+                value.append("%")
+            }
+            break
+        case "divide":
+            if value != "0" {
+                value.append("÷")
+            }
+            break
+        case "multiply":
+            if value != "0" {
+                value.append("×")
+            }
+            break
+        case "minus":
+            if value != "0" {
+                value.append("-")
+            }
+            break
+        case "plus":
+            if value != "0" {
+                value.append("+")
+            }
+            break
+        case "dot":
+            if value != "0" && !value.contains(".") {
+                value.append(".")
+            }
+            break
+        case "equal":
+            value = handleCalculation(input: value)
+            break
         default:
             if value == "0" {
                 value = input
@@ -102,6 +135,19 @@ struct ContentView: View {
                 value += input
             }
             break
+        }
+        func handleCalculation(input: String) -> String {
+            var input = input
+            
+            input = input.replacingOccurrences(of: "×", with: "*")
+            input = input.replacingOccurrences(of: "÷", with: "/")
+            
+            let expression = NSExpression(format: input)
+            if let value = expression.expressionValue(with: nil, context: nil) as? NSNumber {
+                return value.stringValue
+            } else {
+                return "Error"
+            }
         }
     }
 }
