@@ -3,10 +3,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var value: String = "0"
-    @State private var result: Float = 0
     
     let buttons: [[String]] = [
-        ["clear", "plus.slash.minus", "percent", "divide"],
+        ["AC", "plus.slash.minus", "percent", "divide"],
         ["7", "8", "9", "multiply"],
         ["4", "5", "6", "minus"],
         ["1", "2", "3", "plus"],
@@ -46,7 +45,7 @@ struct ContentView: View {
                                 Button(action: {
                                     handleClick(input: btn)
                                 }) {
-                                    if (Int(btn) != nil || btn == ".") {
+                                    if (Int(btn) != nil || btn == "." || btn == "AC") {
                                         Text(btn)
                                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                                             .contentShape(Rectangle())
@@ -81,10 +80,20 @@ struct ContentView: View {
     }
     func handleClick(input: String) {
         switch input {
-        case "clear":
-            result = 0
+        case "AC":
             value = "0"
             break
+        case "delete.left":
+            if value != "0" {
+                if value == "Error" {
+                    value = "0"
+                } else {
+                    value.removeLast()
+                    if (value == "") {
+                        value = "0"
+                    }
+                }
+            }
         case "plus.slash.minus":
             if value != "0" {
                 if Double(value)! > 0 {
@@ -97,7 +106,11 @@ struct ContentView: View {
             }
         case "percent":
             if value != "0" {
-                value.append("%")
+                if let number = Double(value) {
+                    value = String(number / 100)
+                } else {
+                    value = "Error"
+                }
             }
             break
         case "divide":
@@ -120,8 +133,8 @@ struct ContentView: View {
                 value.append("+")
             }
             break
-        case "dot":
-            if value != "0" && !value.contains(".") {
+        case ".":
+            if !value.contains(".") {
                 value.append(".")
             }
             break
@@ -141,6 +154,10 @@ struct ContentView: View {
             
             input = input.replacingOccurrences(of: "×", with: "*")
             input = input.replacingOccurrences(of: "÷", with: "/")
+            
+            if input.contains("/0") {
+                return "Error"
+            }
             
             let expression = NSExpression(format: input)
             if let value = expression.expressionValue(with: nil, context: nil) as? NSNumber {
