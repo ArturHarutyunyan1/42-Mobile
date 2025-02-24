@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var value: String = "0"
+    @StateObject private var logic = CalculatorViewModel()
     
     let buttons: [[String]] = [
         ["AC", "plus.slash.minus", "percent", "divide"],
@@ -26,7 +26,7 @@ struct ContentView: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text("\(value)")
+                        Text("\(logic.value)")
                             .font(.custom("Helvetica Neue", size: 52))
                             .foregroundStyle(Color.white)
                             .padding(10)
@@ -43,7 +43,7 @@ struct ContentView: View {
                         HStack(spacing: 10) {
                             ForEach(row, id: \.self) { btn in
                                 Button(action: {
-                                    handleClick(input: btn)
+                                    logic.handleClick(input: btn)
                                 }) {
                                     if (Int(btn) != nil || btn == "." || btn == "AC") {
                                         Text(btn)
@@ -76,118 +76,6 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.bottom, geometry.safeAreaInsets.bottom)
             .ignoresSafeArea(.keyboard)
-        }
-    }
-    func handleClick(input: String) {
-        switch input {
-        case "AC":
-            value = "0"
-            break
-        case "delete.left":
-            if value != "0" {
-                if value == "Error" {
-                    value = "0"
-                } else {
-                    value.removeLast()
-                    if (value == "") {
-                        value = "0"
-                    }
-                }
-            }
-        case "plus.slash.minus":
-            if value != "0" {
-                if Double(value)! > 0 {
-                    value = "-" + value
-                } else {
-                    if let index = value.firstIndex(of: "-") {
-                        value.remove(at: index)
-                    }
-                }
-            }
-        case "percent":
-            if value != "0" {
-                if let number = Double(value) {
-                    value = String(number / 100)
-                } else {
-                    value = "Error"
-                }
-            }
-            break
-        case "divide":
-            if value != "0" {
-                checkLast(op: "÷")
-            }
-            break
-        case "multiply":
-            if value != "0" {
-                checkLast(op: "×")
-            }
-            break
-        case "minus":
-            if value != "0" {
-                checkLast(op: "-")
-            }
-            break
-        case "plus":
-            if value != "0" {
-                checkLast(op: "+")
-            }
-            break
-        case ".":
-            if !value.contains(".") {
-                value.append(".")
-            }
-            break
-        case "equal":
-            if let lastChar = value.last {
-                if !isOperator(lastChar) {
-                    value = handleCalculation(input: value)
-                }
-            }
-            break
-        default:
-            if value == "Error" {
-                value = "0"
-            }
-            if value == "0" {
-                value = input
-            } else {
-                value += input
-            }
-            break
-        }
-        func isOperator(_ input: Character) -> Bool {
-            if input == "+" || input == "-" || input == "×" || input == "÷" {
-                return true
-            }
-            return false
-        }
-        func checkLast(op: Character) {
-            if let last = value.last {
-                if isOperator(last) {
-                    value.removeLast()
-                    value.append(op)
-                } else {
-                    value.append(op)
-                }
-            }
-        }
-        func handleCalculation(input: String) -> String {
-            var input = input
-            
-            input = input.replacingOccurrences(of: "×", with: "*")
-            input = input.replacingOccurrences(of: "÷", with: "/")
-            
-            if input.contains("/0") {
-                return "Error"
-            }
-            
-            let expression = NSExpression(format: input)
-            if let value = expression.expressionValue(with: nil, context: nil) as? NSNumber {
-                return value.stringValue
-            } else {
-                return "Error"
-            }
         }
     }
 }
