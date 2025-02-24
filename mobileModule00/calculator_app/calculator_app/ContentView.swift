@@ -3,7 +3,6 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var value: String = "0"
-    private let logic = CalculatorLogic()
     
     let buttons: [[String]] = [
         ["AC", "plus.slash.minus", "percent", "divide"],
@@ -116,22 +115,22 @@ struct ContentView: View {
             break
         case "divide":
             if value != "0" {
-                value.append("÷")
+                checkLast(op: "÷")
             }
             break
         case "multiply":
             if value != "0" {
-                value.append("×")
+                checkLast(op: "×")
             }
             break
         case "minus":
             if value != "0" {
-                value.append("-")
+                checkLast(op: "-")
             }
             break
         case "plus":
             if value != "0" {
-                value.append("+")
+                checkLast(op: "+")
             }
             break
         case ".":
@@ -140,15 +139,38 @@ struct ContentView: View {
             }
             break
         case "equal":
-            value = handleCalculation(input: value)
+            if let lastChar = value.last {
+                if !isOperator(lastChar) {
+                    value = handleCalculation(input: value)
+                }
+            }
             break
         default:
+            if value == "Error" {
+                value = "0"
+            }
             if value == "0" {
                 value = input
             } else {
                 value += input
             }
             break
+        }
+        func isOperator(_ input: Character) -> Bool {
+            if input == "+" || input == "-" || input == "×" || input == "÷" {
+                return true
+            }
+            return false
+        }
+        func checkLast(op: Character) {
+            if let last = value.last {
+                if isOperator(last) {
+                    value.removeLast()
+                    value.append(op)
+                } else {
+                    value.append(op)
+                }
+            }
         }
         func handleCalculation(input: String) -> String {
             var input = input
