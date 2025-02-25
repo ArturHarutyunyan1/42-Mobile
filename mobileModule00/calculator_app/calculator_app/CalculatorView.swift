@@ -27,11 +27,55 @@ class CalculatorViewModel: ObservableObject {
                 }
             }
         case "plus.slash.minus":
-            if value != "0" {
-                if let number = Double(value) {
-                    value = number > 0 ? "-\(value)" : String(value.dropFirst())
+            if value != "0" && value != "Error" {
+                var operandRange: Range<String.Index>
+                
+                if value.last == ")" {
+                    var count = 0
+                    var index = value.index(before: value.endIndex)
+                    var startIndex: String.Index? = nil
+                    while true {
+                        let char = value[index]
+                        if char == ")" {
+                            count += 1
+                        } else if char == "(" {
+                            count -= 1
+                            if count == 0 {
+                                startIndex = index
+                                break
+                            }
+                        }
+                        if index == value.startIndex { break }
+                        index = value.index(before: index)
+                    }
+                    if let startIndex = startIndex {
+                        operandRange = startIndex..<value.endIndex
+                    } else {
+                        operandRange = value.startIndex..<value.endIndex
+                    }
+                } else {
+                    var start = value.endIndex
+                    while start > value.startIndex {
+                        let prevIndex = value.index(before: start)
+                        if isOperator(value[prevIndex]) {
+                            break
+                        }
+                        start = prevIndex
+                    }
+                    operandRange = start..<value.endIndex
+                }
+                
+                let operand = String(value[operandRange])
+                
+                if operand.hasPrefix("(-") && operand.hasSuffix(")") {
+                    let strippedOperand = operand.dropFirst(2).dropLast()
+                    value.replaceSubrange(operandRange, with: strippedOperand)
+                } else {
+                    let newOperand = "(-" + operand + ")"
+                    value.replaceSubrange(operandRange, with: newOperand)
                 }
             }
+
         case "percent":
             if let number = Double(value) {
                 value = String(number / 100)
