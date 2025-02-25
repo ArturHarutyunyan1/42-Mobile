@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 class CalculatorViewModel: ObservableObject {
     @Published var value: String = "0"
     
@@ -66,16 +65,20 @@ class CalculatorViewModel: ObservableObject {
                 }
                 
                 let operand = String(value[operandRange])
-                
+                var coreOperand = operand
                 if operand.hasPrefix("(-") && operand.hasSuffix(")") {
-                    let strippedOperand = operand.dropFirst(2).dropLast()
-                    value.replaceSubrange(operandRange, with: strippedOperand)
+                    coreOperand = String(operand.dropFirst(2).dropLast())
+                }
+                if coreOperand.isEmpty {
+                    return
+                }
+                if operand.hasPrefix("(-") && operand.hasSuffix(")") {
+                    value.replaceSubrange(operandRange, with: coreOperand)
                 } else {
                     let newOperand = "(-" + operand + ")"
                     value.replaceSubrange(operandRange, with: newOperand)
                 }
             }
-
         case "percent":
             if let number = Double(value) {
                 value = String(number / 100)
@@ -91,18 +94,42 @@ class CalculatorViewModel: ObservableObject {
         case "plus":
             checkLast(op: "+")
         case ".":
-            if !value.contains(".") {
+            var operandStart = value.endIndex
+            while operandStart > value.startIndex {
+                let prevIndex = value.index(before: operandStart)
+                if isOperator(value[prevIndex]) {
+                    break
+                }
+                operandStart = prevIndex
+            }
+            let lastOperand = value[operandStart..<value.endIndex]
+            if lastOperand.contains(".") {
+                break
+            }
+            
+            if let lastChar = value.last, isOperator(lastChar) || lastOperand.isEmpty {
+                value.append("0.")
+            } else {
                 value.append(".")
             }
+
         case "equal":
-            if let lastChar = value.last, !isOperator(lastChar) {
+            if let lastChar = value.last, !isOperator(lastChar), value.last != "." {
                 value = handleCalculation(input: value)
             }
         default:
             if value == "Error" {
                 value = "0"
             }
-            value = (value == "0") ? input : value + input
+            if value == "0" {
+                value = input
+            } else {
+                if let lastChar = value.last,
+                   lastChar == ")" && input.first?.isNumber == true {
+                    value.append("×")
+                }
+                value.append(input)
+            }
         }
     }
     
@@ -111,10 +138,15 @@ class CalculatorViewModel: ObservableObject {
     }
     
     private func checkLast(op: Character) {
-        if let last = value.last, isOperator(last) {
-            value.removeLast()
+        
+        if let last = value.last {
+            if isOperator(last) {
+                value.removeLast()
+            }
+            if last != "." {
+                value.append(op)
+            }
         }
-        value.append(op)
     }
     
     private func handleCalculation(input: String) -> String {
