@@ -106,7 +106,9 @@ class CalculatorViewModel: ObservableObject {
             if lastOperand.contains(".") {
                 break
             }
-            
+            if let lastChar = value.last, lastChar == ")" {
+                value.append("×0")
+            }
             if let lastChar = value.last, isOperator(lastChar) || lastOperand.isEmpty {
                 value.append("0.")
             } else {
