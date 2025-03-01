@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum AppTab: Hashable {
+enum AppTab: CaseIterable, Hashable {
     case currently, today, weekly
 }
 
@@ -42,6 +42,21 @@ struct ContentView: View {
             .animation(.smooth(duration: 0.3), value: selectedTab)
             .navigationBarBackButtonHidden(true)
         }
+        .gesture(
+            DragGesture(minimumDistance: 50)
+                .onEnded { value in
+                    let tabs = AppTab.allCases
+                    if let currentIndex = tabs.firstIndex(of: selectedTab) {
+                        if value.translation.width > 0 {
+                            let newIndex = (currentIndex - 1 + tabs.count) % tabs.count
+                            selectedTab = tabs[newIndex]
+                        } else {
+                            let newIndex = (currentIndex + 1) % tabs.count
+                            selectedTab = tabs[newIndex]
+                        }
+                    }
+                }
+        )
     }
 }
 
