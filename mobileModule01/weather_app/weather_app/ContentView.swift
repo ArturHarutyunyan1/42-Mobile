@@ -1,24 +1,21 @@
-//
-//  ContentView.swift
-//  weather_app
-//
-//  Created by Artur Harutyunyan on 01.03.25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Spacer()
+            // Bottom bar
+            GeometryReader { geometry in
+                Navigation()
+            }
+            .frame(height: 80)
         }
-        .padding()
+        .navigationBarBackButtonHidden(true)
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
