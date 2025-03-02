@@ -5,7 +5,6 @@
 //  Created by Artur Harutyunyan on 01.03.25.
 //
 
-
 import SwiftUI
 
 enum AppTab: CaseIterable, Hashable {
@@ -15,60 +14,23 @@ enum AppTab: CaseIterable, Hashable {
 struct ContentView: View {
     @State private var selectedTab: AppTab = .currently
     @StateObject private var handler = WeatherViewModel()
+
     var body: some View {
-        VStack (spacing: 0) {
+        VStack(spacing: 0) {
             Search(handler: handler)
-            NavigationStack {
-                ZStack {
-                    if selectedTab == .currently {
-                        Home(cityName: $handler.cityName)
-                            .id("currently")
-                            .transition(.asymmetric(
-                                insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),
-                                removal: AnyTransition.move(edge: .leading).combined(with: .opacity)
-                            ))
-                    } else if selectedTab == .today {
-                        Today(cityName: $handler.cityName)
-                            .id("today")
-                            .transition(.asymmetric(
-                                insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),
-                                removal: AnyTransition.move(edge: .leading).combined(with: .opacity)
-                            ))
-                    } else if selectedTab == .weekly {
-                        Weekly(cityName: $handler.cityName)
-                            .id("weekly")
-                            .transition(.asymmetric(
-                                insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),
-                                removal: AnyTransition.move(edge: .leading).combined(with: .opacity)
-                            ))
-                    }
-                    VStack {
-                        Spacer()
-                        Navigation(selectedTab: $selectedTab)
-                            .frame(height: 80)
-                            .padding(.horizontal)
-                    }
-                }
-                .animation(.linear(duration: 0.3), value: selectedTab)
-                .navigationBarBackButtonHidden(true)
+            TabView(selection: $selectedTab) {
+                Home(cityName: $handler.cityName)
+                    .tag(AppTab.currently)
+                Today(cityName: $handler.cityName)
+                    .tag(AppTab.today)
+                Weekly(cityName: $handler.cityName)
+                    .tag(AppTab.weekly)
             }
-            .gesture(
-                DragGesture(minimumDistance: 50)
-                    .onEnded { value in
-                        if abs(value.translation.width) > abs(value.translation.height) {
-                            let tabs = AppTab.allCases
-                            if let currentIndex = tabs.firstIndex(of: selectedTab) {
-                                if value.translation.width > 0 {
-                                    let newIndex = (currentIndex - 1 + tabs.count) % tabs.count
-                                    selectedTab = tabs[newIndex]
-                                } else {
-                                    let newIndex = (currentIndex + 1) % tabs.count
-                                    selectedTab = tabs[newIndex]
-                                }
-                            }
-                        }
-                    }
-            )
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .animation(.easeInOut(duration: 0.3), value: selectedTab)
+            Navigation(selectedTab: $selectedTab)
+                .frame(height: 80)
+                .padding(.horizontal)
         }
     }
 }
