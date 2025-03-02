@@ -21,9 +21,12 @@ struct Search: View {
                 .onSubmit {
                     handler.setCityName(input: input)
                 }
-
-            Image(systemName: "location.fill")
-                .foregroundColor(.blue)
+            Button {
+                handler.setCityName(input: "Geolocation")
+            } label: {
+                Image(systemName: "location.fill")
+                    .foregroundColor(.blue)
+            }
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity, minHeight: 50)
