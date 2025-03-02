@@ -14,28 +14,28 @@ enum AppTab: CaseIterable, Hashable {
 
 struct ContentView: View {
     @State private var selectedTab: AppTab = .currently
-    
+    @StateObject private var handler = WeatherViewModel()
     var body: some View {
         VStack (spacing: 0) {
-            Search()
+            Search(handler: handler)
             NavigationStack {
                 ZStack {
                     if selectedTab == .currently {
-                        Home()
+                        Home(cityName: $handler.cityName)
                             .id("currently")
                             .transition(.asymmetric(
                                 insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),
                                 removal: AnyTransition.move(edge: .leading).combined(with: .opacity)
                             ))
                     } else if selectedTab == .today {
-                        Today()
+                        Today(cityName: $handler.cityName)
                             .id("today")
                             .transition(.asymmetric(
                                 insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),
                                 removal: AnyTransition.move(edge: .leading).combined(with: .opacity)
                             ))
                     } else if selectedTab == .weekly {
-                        Weekly()
+                        Weekly(cityName: $handler.cityName)
                             .id("weekly")
                             .transition(.asymmetric(
                                 insertion: AnyTransition.move(edge: .trailing).combined(with: .opacity),

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Search: View {
     @State private var input: String = ""
+    @ObservedObject var handler: WeatherViewModel
 
     var body: some View {
         HStack {
@@ -17,6 +18,9 @@ struct Search: View {
             
             TextField("Search...", text: $input)
                 .padding(.vertical, 10)
+                .onSubmit {
+                    handler.setCityName(input: input)
+                }
 
             Image(systemName: "location.fill")
                 .foregroundColor(.blue)

@@ -9,8 +9,13 @@ import SwiftUI
 
 
 struct Home: View {
+    @Binding var cityName: String
     var body: some View {
-        Text("Currently")
-            .font(.system(size: 50))
+        VStack {
+            Text("\(cityName)")
+                .font(.system(size: 50))
+            Text("Currently")
+                .font(.system(size: 50))
+        }
     }
 }
