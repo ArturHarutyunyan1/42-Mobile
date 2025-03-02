@@ -8,11 +8,25 @@
 import SwiftUI
 
 struct Search: View {
+    @State private var input: String = ""
+
     var body: some View {
         HStack {
-            Text("App bar")
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+            
+            TextField("Search...", text: $input)
+                .padding(.vertical, 10)
+
+            Image(systemName: "location.fill")
+                .foregroundColor(.blue)
         }
-        .frame(width: UIScreen.main.bounds.width, height: 60)
-        .background(Color.red)
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, minHeight: 50)
+        .background(Color(.systemGray6))
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .padding(.horizontal)
     }
 }
+
