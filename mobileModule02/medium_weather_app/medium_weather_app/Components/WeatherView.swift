@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+import CoreLocation
+import CoreLocationUI
+
+
 
 class WeatherViewModel: ObservableObject {
     @Published var cityName: String = ""

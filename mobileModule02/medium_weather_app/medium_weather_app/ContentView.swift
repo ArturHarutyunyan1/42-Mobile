@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 enum AppTab: CaseIterable, Hashable {
     case currently, today, weekly
@@ -32,6 +33,9 @@ struct ContentView: View {
                 .frame(height: 80)
                 .padding(.horizontal)
         }
+        .onAppear() {
+            CLLocationManager().requestWhenInUseAuthorization()
+        }
     }
 }
 
@@ -40,4 +44,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
