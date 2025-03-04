@@ -10,6 +10,7 @@ import SwiftUI
 struct Search: View {
     @State private var input: String = ""
     @ObservedObject var handler: WeatherViewModel
+    @StateObject private var location = LocationManager()
 
     var body: some View {
         HStack {
@@ -22,7 +23,10 @@ struct Search: View {
                     handler.setCityName(input: input)
                 }
             Button {
-                handler.setCityName(input: "Geolocation")
+                location.checkStatus()
+                handler.setLat(input: location.lat ?? "")
+                handler.setLon(input: location.lon ?? "")
+                handler.setCityName(input: "")
             } label: {
                 Image(systemName: "location.fill")
                     .foregroundColor(.blue)

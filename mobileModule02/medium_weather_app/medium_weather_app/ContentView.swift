@@ -15,16 +15,26 @@ enum AppTab: CaseIterable, Hashable {
 struct ContentView: View {
     @State private var selectedTab: AppTab = .currently
     @StateObject private var handler = WeatherViewModel()
+    @StateObject private var location = LocationManager()
 
     var body: some View {
         VStack(spacing: 0) {
             Search(handler: handler)
+            if location.status == false && handler.cityName == "" {
+                VStack {
+                    Text("Your location services are disabled. Please enable them in your settings.")
+                }
+                .frame(width: UIScreen.main.bounds.width, height: 50)
+                .padding(10)
+                .background(Color.red)
+                
+            }
             TabView(selection: $selectedTab) {
-                Home(cityName: $handler.cityName)
+                Home(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
                     .tag(AppTab.currently)
-                Today(cityName: $handler.cityName)
+                Today(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
                     .tag(AppTab.today)
-                Weekly(cityName: $handler.cityName)
+                Weekly(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
                     .tag(AppTab.weekly)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -34,7 +44,7 @@ struct ContentView: View {
                 .padding(.horizontal)
         }
         .onAppear() {
-            CLLocationManager().requestWhenInUseAuthorization()
+            location.checkStatus()
         }
     }
 }

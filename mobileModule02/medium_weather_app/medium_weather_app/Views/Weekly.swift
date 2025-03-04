@@ -9,10 +9,16 @@ import SwiftUI
 
 struct Weekly: View {
     @Binding var cityName: String
+    @Binding var latitude: String?
+    @Binding var longitude: String?
     var body: some View {
         VStack {
-            Text("\(cityName)")
-                .font(.system(size: 50))
+            Text(cityName.isEmpty
+                 ? (latitude != nil && longitude != nil
+                    ? "\(latitude!), \(longitude!)"
+                    : "")
+                 : cityName)
+                .font(.system(size: 20))
             Text("Weekly")
                 .font(.system(size: 50))
         }
