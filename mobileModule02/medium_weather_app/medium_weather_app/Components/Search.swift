@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Search: View {
     @State private var input: String = ""
+    @State private var isActive: Bool = false
     @ObservedObject var handler: WeatherViewModel
     @StateObject private var location = LocationManager()
 
@@ -19,6 +20,12 @@ struct Search: View {
             
             TextField("Search...", text: $input)
                 .padding(.vertical, 10)
+                .onChange(of: input, {
+                    isActive = true
+                    if input == "" {
+                        isActive = false
+                    }
+                })
                 .onSubmit {
                     handler.setCityName(input: input)
                 }
@@ -38,6 +45,18 @@ struct Search: View {
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
         .padding(.horizontal)
+        if isActive == true {
+            Spacer()
+            Spacer()
+            VStack {
+            }
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, minHeight: 50)
+            .background(Color(.systemGray6))
+            .cornerRadius(15)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .padding(.horizontal)
+        }
     }
 }
 
