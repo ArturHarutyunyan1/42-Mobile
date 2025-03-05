@@ -9,6 +9,26 @@ import SwiftUI
 import CoreLocation
 import CoreLocationUI
 
+struct searchResultItem : Codable {
+    let results: [searchResult]
+}
+
+struct searchResult: Codable, Identifiable {
+    let id = UUID()
+    let name: String
+    let latitude: Double
+    let longitude: Double
+    let country: String
+    let admin1: String
+}
+
+
+enum apiCallError : Error {
+    case invalidCityName
+    case invalidResponse
+    case invalidData
+}
+
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var lat: String?
     @Published var lon: String?
@@ -67,14 +87,42 @@ class WeatherViewModel: ObservableObject {
     @Published var cityName: String = ""
     @Published var lat: String = ""
     @Published var lon: String = ""
+    @Published var searchResults: [searchResult] = []
     
-    func setCityName(input: String) {
-        cityName = input
+    func setCoords(name: String, latitude: String, longitude: String) {
+        cityName = name
+        lat = latitude
+        lon = longitude
     }
-    func setLat(input: String) {
-        lat = input
+    
+    func searchAPI(name: String) async {
+        do {
+            let result = try await getSearchResults(name: name)
+            await MainActor.run { [weak self] in
+                self?.searchResults = result.results
+            }
+        } catch {
+            print("Error fetching search results:", error)
+        }
     }
-    func setLon(input: String) {
-        lon = input
+    func getSearchResults(name: String) async throws -> searchResultItem {
+        let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language=en&format=json"
+        guard let url = URL(string: endpoint) else {
+            throw apiCallError.invalidCityName
+        }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw apiCallError.invalidResponse
+        }
+
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            return try decoder.decode(searchResultItem.self, from: data)
+        } catch {
+            throw apiCallError.invalidData
+        }
     }
 }
