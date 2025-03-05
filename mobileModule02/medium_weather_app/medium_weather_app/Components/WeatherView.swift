@@ -106,7 +106,13 @@ class WeatherViewModel: ObservableObject {
         }
     }
     func getSearchResults(name: String) async throws -> searchResultItem {
-        let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language=en&format=json"
+        guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
+              let xml = FileManager.default.contents(atPath: path),
+              let config = try? PropertyListDecoder().decode([String: String].self, from: xml),
+              let baseURL = config["SearchAPI_URL"] else {
+            throw apiCallError.invalidCityName
+        }
+        let endpoint = "\(baseURL)?name=\(name)&count=10&language=en&format=json"
         guard let url = URL(string: endpoint) else {
             throw apiCallError.invalidCityName
         }

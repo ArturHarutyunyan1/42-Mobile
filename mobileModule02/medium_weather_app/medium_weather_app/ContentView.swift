@@ -46,6 +46,8 @@ struct ContentView: View {
         .onAppear() {
             location.checkStatus()
         }
+        .scrollDismissesKeyboard(.immediately)
+        .ignoresSafeArea(.keyboard)
     }
 }
 

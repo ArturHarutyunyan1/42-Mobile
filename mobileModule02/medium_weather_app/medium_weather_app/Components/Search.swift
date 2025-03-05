@@ -23,6 +23,7 @@ struct Search: View {
                 .onChange(of: input, {
                     isActive = true
                     if input == "" {
+                        handler.setCoords(name: "", latitude: "", longitude: "")
                         isActive = false
                     }
                     searchCity()
@@ -44,7 +45,7 @@ struct Search: View {
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
         .padding(.horizontal)
-        if isActive == true {
+        if isActive == true && handler.searchResults.count > 0 {
             Spacer()
             Spacer()
             ScrollView {
@@ -64,11 +65,12 @@ struct Search: View {
                 }
             }
             .padding(.horizontal)
-            .frame(maxWidth: .infinity, maxHeight: 250)
+            .frame(maxWidth: .infinity)
             .background(Color(.systemGray6))
             .cornerRadius(15)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             .padding(.horizontal)
+            .ignoresSafeArea(.all)
         }
     }
     private func searchCity() {
