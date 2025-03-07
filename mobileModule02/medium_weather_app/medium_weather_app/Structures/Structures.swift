@@ -33,6 +33,14 @@ struct CurrentData : Codable {
 
 }
 
+struct LocationInfo : Equatable {
+    var latitude: Double
+    var longitude: Double
+    var city: String?
+    var state: String?
+    var country: String?
+}
+
 enum apiCallError : Error {
     case invalidCityName
     case invalidResponse

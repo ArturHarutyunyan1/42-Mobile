@@ -13,8 +13,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var lat: String?
     @Published var lon: String?
     @Published var status: Bool?
+    @Published var cityName: String?
+    @Published var countryName: String?
+    @Published var stateName: String?
     
     let locationManager = CLLocationManager()
+    let geocoder = CLGeocoder()
     
     override init() {
         super.init()
@@ -59,6 +63,20 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         lat = String(location.coordinate.latitude)
         lon = String(location.coordinate.longitude)
+        reverseGeocode(location: location)
+    }
+    private func reverseGeocode(location: CLLocation) {
+        geocoder.reverseGeocodeLocation(location) {[weak self] placemarks, error in
+            guard let self = self, error == nil, let placemark = placemarks?.first else {
+                print("Unknown error")
+                return
+            }
+            DispatchQueue.main.async {
+                self.cityName = placemark.locality
+                self.countryName = placemark.country
+                self.stateName = placemark.administrativeArea
+            }
+        }
     }
 }
 
