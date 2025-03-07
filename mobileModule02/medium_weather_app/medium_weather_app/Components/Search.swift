@@ -23,14 +23,10 @@ struct Search: View {
                 .onChange(of: input, {
                     isActive = true
                     if input == "" {
-                        handler.setCoords(name: "", latitude: "", longitude: "")
                         isActive = false
                     }
-                    searchCity()
+                    searchCity(name: input)
                 })
-//                .onSubmit {
-//                    searchCity()
-//                }
             Button {
                 location.checkStatus()
                 handler.setCoords(name: "", latitude: location.lat ?? "", longitude: location.lon ?? "")
@@ -50,15 +46,19 @@ struct Search: View {
             Spacer()
             ScrollView {
                 ForEach(handler.searchResults) { result in
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("\(result.name)")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        HStack {
-                            Text("\(result.admin1), \(result.country)")
-                                .foregroundStyle(Color(.systemGray2))
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                    Button(action: {
+                        print("A")
+                    }) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("\(result.name)")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            HStack {
+                                Text("\(result.admin1), \(result.country)")
+                                    .foregroundStyle(Color(.systemGray2))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
                         }
                     }
                     .padding(10)
@@ -73,10 +73,9 @@ struct Search: View {
             .ignoresSafeArea(.all)
         }
     }
-    private func searchCity() {
-        handler.setCoords(name: input, latitude: "", longitude: "")
+    private func searchCity(name: String) {
         Task {
-            await handler.searchAPI(name: input)
+            await handler.searchAPI(name: name)
         }
     }
 }

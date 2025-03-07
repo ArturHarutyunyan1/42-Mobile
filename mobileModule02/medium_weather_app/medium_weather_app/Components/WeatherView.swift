@@ -9,32 +9,13 @@ import SwiftUI
 import CoreLocation
 import CoreLocationUI
 
-struct searchResultItem : Codable {
-    let results: [searchResult]
-}
-
-struct searchResult: Codable, Identifiable {
-    let id = UUID()
-    let name: String
-    let latitude: Double
-    let longitude: Double
-    let country: String
-    let admin1: String
-}
-
-
-enum apiCallError : Error {
-    case invalidCityName
-    case invalidResponse
-    case invalidData
-}
-
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var lat: String?
     @Published var lon: String?
     @Published var status: Bool?
+    
     let locationManager = CLLocationManager()
-
+    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -79,15 +60,15 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         lat = String(location.coordinate.latitude)
         lon = String(location.coordinate.longitude)
     }
-
 }
 
-
+@MainActor
 class WeatherViewModel: ObservableObject {
     @Published var cityName: String = ""
     @Published var lat: String = ""
     @Published var lon: String = ""
     @Published var searchResults: [searchResult] = []
+    @Published var weatherData: WeatherData?
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -106,13 +87,7 @@ class WeatherViewModel: ObservableObject {
         }
     }
     func getSearchResults(name: String) async throws -> searchResultItem {
-        guard let path = Bundle.main.path(forResource: "Config", ofType: "plist"),
-              let xml = FileManager.default.contents(atPath: path),
-              let config = try? PropertyListDecoder().decode([String: String].self, from: xml),
-              let baseURL = config["SearchAPI_URL"] else {
-            throw apiCallError.invalidCityName
-        }
-        let endpoint = "\(baseURL)?name=\(name)&count=10&language=en&format=json"
+        let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language=en&format=json"
         guard let url = URL(string: endpoint) else {
             throw apiCallError.invalidCityName
         }
@@ -130,5 +105,31 @@ class WeatherViewModel: ObservableObject {
         } catch {
             throw apiCallError.invalidData
         }
+    }
+    func getWeatherForecast(lat: Double, lon: Double) {
+        let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=temperature_2m,wind_speed_10m"
+        guard let url = URL(string: endpoint) else {
+            return
+        }
+        URLSession.shared.dataTask(with: url) {data, response, error in
+            if let error = error {
+                print("Error")
+                return
+            }
+            guard let data = data else {
+                print("invalid data")
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let decodedData = try decoder.decode(WeatherData.self, from: data)
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                DispatchQueue.main.async {
+                    self.weatherData = decodedData
+                }
+            } catch {
+                print("Err")
+            }
+        }.resume()
     }
 }

@@ -12,6 +12,7 @@ struct Home: View {
     @Binding var cityName: String
     @Binding var latitude: String?
     @Binding var longitude: String?
+    @Binding var weatherData: WeatherData?
     var body: some View {
         VStack {
             Text(cityName.isEmpty
@@ -22,6 +23,10 @@ struct Home: View {
                 .font(.system(size: 20))
             Text("Currently")
                 .font(.system(size: 50))
+            if let data = weatherData {
+                Text("\(data.current.temperature_2m)")
+                Text("\(data.current.interval)")
+            }
         }
     }
 }

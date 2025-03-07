@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Combine
 
 enum AppTab: CaseIterable, Hashable {
     case currently, today, weekly
@@ -29,22 +30,34 @@ struct ContentView: View {
                 .background(Color.red)
                 
             }
-            TabView(selection: $selectedTab) {
-                Home(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
-                    .tag(AppTab.currently)
-                Today(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
-                    .tag(AppTab.today)
-                Weekly(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
-                    .tag(AppTab.weekly)
+            VStack {
+                TabView(selection: $selectedTab) {
+                    Home(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon, weatherData: $handler.weatherData)
+                        .tag(AppTab.currently)
+                    Today(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
+                        .tag(AppTab.today)
+                    Weekly(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
+                        .tag(AppTab.weekly)
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.easeInOut(duration: 0.3), value: selectedTab)
+                Navigation(selectedTab: $selectedTab)
+                    .frame(height: 80)
+                    .padding(.horizontal)
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(.easeInOut(duration: 0.3), value: selectedTab)
-            Navigation(selectedTab: $selectedTab)
-                .frame(height: 80)
-                .padding(.horizontal)
-        }
-        .onAppear() {
-            location.checkStatus()
+            .onAppear() {
+                location.checkStatus()
+            }
+            .onReceive(Publishers.CombineLatest(location.$lat, location.$lon)) { lat, lon in
+                if let stringLat = lat,
+                   let stringLon = lon,
+                   let lat = Double(stringLat),
+                   let lon = Double(stringLon) {
+                    Task {
+                        handler.getWeatherForecast(lat: lat, lon: lon)
+                    }
+                }
+            }
         }
         .scrollDismissesKeyboard(.immediately)
         .ignoresSafeArea(.keyboard)
