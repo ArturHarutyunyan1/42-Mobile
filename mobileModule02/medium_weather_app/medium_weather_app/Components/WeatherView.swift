@@ -87,6 +87,7 @@ class WeatherViewModel: ObservableObject {
     @Published var lon: String = ""
     @Published var searchResults: [searchResult] = []
     @Published var weatherData: WeatherData?
+//    @StateObject var location: LocationManager = LocationManager()
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -124,7 +125,7 @@ class WeatherViewModel: ObservableObject {
             throw apiCallError.invalidData
         }
     }
-    func getWeatherForecast(lat: Double, lon: Double) {
+    func getWeatherForecast(lat: Double, lon: Double, location: LocationManager) {
         let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=temperature_2m,wind_speed_10m"
         guard let url = URL(string: endpoint) else {
             return

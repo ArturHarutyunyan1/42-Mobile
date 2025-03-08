@@ -20,7 +20,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Search(handler: handler)
+            Search(handler: handler, location: location)
             if location.status == false && handler.cityName == "" {
                 VStack {
                     Text("Your location services are disabled. Please enable them in your settings.")
@@ -54,7 +54,7 @@ struct ContentView: View {
                    let lat = Double(stringLat),
                    let lon = Double(stringLon) {
                     Task {
-                        handler.getWeatherForecast(lat: lat, lon: lon)
+                        handler.getWeatherForecast(lat: lat, lon: lon, location: location)
                     }
                 }
             }

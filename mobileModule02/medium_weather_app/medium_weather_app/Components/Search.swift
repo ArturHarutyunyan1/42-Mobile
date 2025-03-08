@@ -11,7 +11,7 @@ struct Search: View {
     @State private var input: String = ""
     @State private var isActive: Bool = false
     @ObservedObject var handler: WeatherViewModel
-    @StateObject private var location = LocationManager()
+    @ObservedObject var location: LocationManager
 
     var body: some View {
         HStack {
@@ -47,7 +47,14 @@ struct Search: View {
             ScrollView {
                 ForEach(handler.searchResults) { result in
                     Button(action: {
-                        print("A")
+                        Task {
+                            DispatchQueue.main.async {
+                                location.cityName = result.name
+                                location.countryName = result.country
+                                location.stateName = result.admin1
+                                handler.getWeatherForecast(lat: result.latitude, lon: result.longitude, location: location)
+                            }
+                        }
                     }) {
                         VStack(alignment: .leading) {
                             HStack {
