@@ -8,19 +8,10 @@
 import SwiftUI
 
 struct Today: View {
-    @Binding var cityName: String
-    @Binding var latitude: String?
-    @Binding var longitude: String?
+    @Binding var locationInfo: LocationInfo?
     var body: some View {
         VStack {
-            Text(cityName.isEmpty
-                 ? (latitude != nil && longitude != nil
-                    ? "\(latitude!), \(longitude!)"
-                    : "")
-                 : cityName)
-                .font(.system(size: 20))
-            Text("Today")
-                .font(.system(size: 50))
+            Text("\(locationInfo?.weaterData?.current.temperature_2m)")
         }
     }
 }

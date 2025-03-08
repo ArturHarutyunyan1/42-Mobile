@@ -53,6 +53,7 @@ struct Search: View {
                                 location.countryName = result.country
                                 location.stateName = result.admin1
                                 handler.getWeatherForecast(lat: result.latitude, lon: result.longitude, location: location)
+                                isActive = false
                             }
                         }
                     }) {

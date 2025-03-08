@@ -32,9 +32,9 @@ struct ContentView: View {
             }
             VStack {
                 TabView(selection: $selectedTab) {
-                    Home(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon, country: $location.countryName, city: $location.cityName, state: $location.stateName, weatherData: $handler.weatherData)
+                    Home(locationInfo: $handler.locationInfo)
                         .tag(AppTab.currently)
-                    Today(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
+                    Today(locationInfo: $handler.locationInfo)
                         .tag(AppTab.today)
                     Weekly(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
                         .tag(AppTab.weekly)

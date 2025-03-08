@@ -86,8 +86,7 @@ class WeatherViewModel: ObservableObject {
     @Published var lat: String = ""
     @Published var lon: String = ""
     @Published var searchResults: [searchResult] = []
-    @Published var weatherData: WeatherData?
-//    @StateObject var location: LocationManager = LocationManager()
+    @Published var locationInfo: LocationInfo?
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -130,24 +129,33 @@ class WeatherViewModel: ObservableObject {
         guard let url = URL(string: endpoint) else {
             return
         }
-        URLSession.shared.dataTask(with: url) {data, response, error in
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error")
+                print("Error fetching weather data: \(error)")
                 return
             }
             guard let data = data else {
-                print("invalid data")
+                print("Invalid data received")
                 return
             }
             do {
                 let decoder = JSONDecoder()
                 let decodedData = try decoder.decode(WeatherData.self, from: data)
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
+                
                 DispatchQueue.main.async {
-                    self.weatherData = decodedData
+                    self.locationInfo = LocationInfo(
+                        latitude: lat,
+                        longitude: lon,
+                        city: location.cityName ?? "Unknown",
+                        state: location.stateName ?? "Unknown",
+                        country: location.countryName ?? "Unknown",
+                        weaterData: decodedData
+                    )
                 }
             } catch {
-                print("Err")
+                print("Error decoding weather data: \(error)")
             }
         }.resume()
     }

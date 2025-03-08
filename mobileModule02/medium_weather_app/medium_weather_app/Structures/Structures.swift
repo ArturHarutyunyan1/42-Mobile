@@ -33,12 +33,13 @@ struct CurrentData : Codable {
 
 }
 
-struct LocationInfo : Equatable {
+struct LocationInfo : Codable {
     var latitude: Double
     var longitude: Double
     var city: String?
     var state: String?
     var country: String?
+    var weaterData: WeatherData?
 }
 
 enum apiCallError : Error {
