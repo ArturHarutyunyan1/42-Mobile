@@ -125,7 +125,7 @@ class WeatherViewModel: ObservableObject {
         }
     }
     func getWeatherForecast(lat: Double, lon: Double, location: LocationManager) {
-        let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=weathercode,temperature_2m,wind_speed_10m"
+        let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=weathercode,temperature_2m,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min"
         guard let url = URL(string: endpoint) else {
             return
         }
@@ -186,10 +186,13 @@ class WeatherViewModel: ObservableObject {
     }
     func setCondition() {
         if let weatherCode = locationInfo?.weaterData!.current.weathercode {
-            locationInfo?.weatherStatus = mapWeatherCodeToStatus(weatherCode)
+            locationInfo?.currentStatus = mapWeatherCodeToStatus(weatherCode)
         }
         if let weatherStatuses = locationInfo?.weaterData?.hourly.weathercode {
-            locationInfo?.weatherStatuses = weatherStatuses.map {mapWeatherCodeToStatus($0)}
+            locationInfo?.todayStatus = weatherStatuses.map {mapWeatherCodeToStatus($0)}
+        }
+        if let weeklyStatuses = locationInfo?.weaterData?.daily.weather_code {
+            locationInfo?.weeklyStatus = weeklyStatuses.map {mapWeatherCodeToStatus($0)}
         }
     }
 }

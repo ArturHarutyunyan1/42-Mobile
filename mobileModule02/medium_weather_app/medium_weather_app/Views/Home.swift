@@ -16,9 +16,9 @@ struct Home: View {
             Text(locationInfo?.state ?? "Unknown State")
             Text(locationInfo?.country ?? "Unknown Country")
             if let data = locationInfo?.weaterData {
-                Text("\(String(format: "%.1f", data.current.temperature_2m))℃")
+                Text("\(String(format: "%.1f", data.current.temperature_2m)) ℃")
                 Text("\(String(format: "%.1f", data.current.wind_speed_10m)) km/h")
-                Text("\(locationInfo?.weatherStatus ?? "")")
+                Text("\(locationInfo?.currentStatus ?? "")")
             }
         }
     }

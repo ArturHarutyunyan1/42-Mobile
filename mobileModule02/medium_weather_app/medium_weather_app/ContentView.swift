@@ -37,7 +37,7 @@ struct ContentView: View {
                         .tag(AppTab.currently)
                     Today(locationInfo: $handler.locationInfo)
                         .tag(AppTab.today)
-                    Weekly(cityName: $handler.cityName, latitude: $location.lat, longitude: $location.lon)
+                    Weekly(locationInfo: $handler.locationInfo)
                         .tag(AppTab.weekly)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))

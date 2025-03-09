@@ -14,6 +14,7 @@ struct searchResultItem : Codable {
 struct WeatherData : Codable {
     let current: CurrentData
     let hourly: HourlyData
+    let daily: DailyData
 }
 
 struct searchResult: Codable, Identifiable {
@@ -40,14 +41,22 @@ struct HourlyData : Codable {
     let wind_speed_10m: [Double]
 }
 
+struct DailyData : Codable {
+    let time: [String]
+    let weather_code: [Int]
+    let temperature_2m_max: [Double]
+    let temperature_2m_min: [Double]
+}
+
 struct LocationInfo : Codable {
     var latitude: Double
     var longitude: Double
     var city: String?
     var state: String?
     var country: String?
-    var weatherStatus: String?
-    var weatherStatuses: [String]?
+    var currentStatus: String?
+    var todayStatus: [String]?
+    var weeklyStatus: [String]?
     var weaterData: WeatherData?
 }
 

@@ -28,7 +28,7 @@ struct Today: View {
                             Spacer()
                             Text("\(String(format: "%.1f", data.temperature_2m[index])) ℃")
                             Spacer()
-                            Text("\(locationInfo?.weatherStatuses?[index] ?? "")")
+                            Text("\(locationInfo?.todayStatus?[index] ?? "")")
                             Spacer()
                             Text("\(String(format: "%.1f", data.wind_speed_10m[index])) km/h")
                             Spacer()
@@ -38,6 +38,7 @@ struct Today: View {
             }
         }
         .frame(minWidth: UIScreen.main.bounds.width * 0.9)
+        .scrollIndicators(.hidden)
         .onAppear() {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
