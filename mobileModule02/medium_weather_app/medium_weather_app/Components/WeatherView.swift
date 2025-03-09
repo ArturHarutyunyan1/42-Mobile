@@ -16,6 +16,7 @@ class WeatherViewModel: ObservableObject {
     @Published var lon: String = ""
     @Published var searchResults: [searchResult] = []
     @Published var locationInfo: LocationInfo?
+    @Published var errorMessage: String? = nil
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -27,12 +28,22 @@ class WeatherViewModel: ObservableObject {
         do {
             let result = try await getSearchResults(name: name)
             await MainActor.run { [weak self] in
-                self?.searchResults = result.results
+                if result.results.isEmpty {
+                    self?.errorMessage = "No results found for the given city."
+                } else {
+                    self?.searchResults = result.results
+                    self?.errorMessage = nil
+                }
             }
         } catch {
             print("Error fetching search results:", error)
+            await MainActor.run { [weak self] in
+                self?.errorMessage = "Error fetching search results: \(error.localizedDescription)"
+            }
         }
     }
+
+    
     func getSearchResults(name: String) async throws -> searchResultItem {
         let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language=en&format=json"
         guard let url = URL(string: endpoint) else {
@@ -53,19 +64,34 @@ class WeatherViewModel: ObservableObject {
             throw apiCallError.invalidData
         }
     }
+    
     func getWeatherForecast(lat: Double, lon: Double, location: LocationManager) {
+        Task {
+            DispatchQueue.main.async {
+                self.errorMessage = nil
+            }
+        }
         let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=weathercode,temperature_2m,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min"
         guard let url = URL(string: endpoint) else {
+            DispatchQueue.main.async {
+                self.errorMessage = "Invalid URL for weather forecast."
+            }
             return
         }
 
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching weather data: \(error)")
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error fetching weather data: \(error.localizedDescription)"
+                }
                 return
             }
             guard let data = data else {
                 print("Invalid data received")
+                DispatchQueue.main.async {
+                    self.errorMessage = "Invalid data received"
+                }
                 return
             }
             do {
@@ -86,9 +112,15 @@ class WeatherViewModel: ObservableObject {
                 }
             } catch {
                 print("Error decoding weather data: \(error)")
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error decoding weather data: \(error.localizedDescription)"
+                }
             }
         }.resume()
     }
+}
+
+extension WeatherViewModel {
     func mapWeatherCodeToStatus(_ code: Int) -> String {
         switch code {
         case 0: return "Clear sky"
@@ -113,15 +145,16 @@ class WeatherViewModel: ObservableObject {
         default: return "Unknown"
         }
     }
+    
     func setCondition() {
         if let weatherCode = locationInfo?.weaterData!.current.weathercode {
             locationInfo?.currentStatus = mapWeatherCodeToStatus(weatherCode)
         }
         if let weatherStatuses = locationInfo?.weaterData?.hourly.weathercode {
-            locationInfo?.todayStatus = weatherStatuses.map {mapWeatherCodeToStatus($0)}
+            locationInfo?.todayStatus = weatherStatuses.map { mapWeatherCodeToStatus($0) }
         }
         if let weeklyStatuses = locationInfo?.weaterData?.daily.weather_code {
-            locationInfo?.weeklyStatus = weeklyStatuses.map {mapWeatherCodeToStatus($0)}
+            locationInfo?.weeklyStatus = weeklyStatuses.map { mapWeatherCodeToStatus($0) }
         }
     }
 }

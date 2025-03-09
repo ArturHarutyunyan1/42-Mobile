@@ -4,7 +4,6 @@
 //
 //  Created by Artur Harutyunyan on 03.03.25.
 //
-
 import SwiftUI
 import MapKit
 import Combine
@@ -22,26 +21,25 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             Search(handler: handler, location: location)
-            if location.status == false && handler.cityName == "" {
-                VStack {
-                    Text("Your location services are disabled. Please enable them in your settings.")
-                }
-                .frame(width: UIScreen.main.bounds.width, height: 50)
-                .padding(10)
-                .background(Color.red)
-                
-            }
             VStack {
                 TabView(selection: $selectedTab) {
-                    Home(locationInfo: $handler.locationInfo)
-                        .tag(AppTab.currently)
-                    Today(locationInfo: $handler.locationInfo)
-                        .tag(AppTab.today)
-                    Weekly(locationInfo: $handler.locationInfo)
-                        .tag(AppTab.weekly)
+                    if location.status == false {
+                        VStack {
+                            Text("Your location services are disabled. Please enable them in your settings.")
+                                .foregroundStyle(.red)
+                        }
+                    } else {
+                        Home(locationInfo: $handler.locationInfo)
+                            .tag(AppTab.currently)
+                        Today(locationInfo: $handler.locationInfo)
+                            .tag(AppTab.today)
+                        Weekly(locationInfo: $handler.locationInfo)
+                            .tag(AppTab.weekly)
+                    }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .animation(.easeInOut(duration: 0.3), value: selectedTab)
+                
                 Navigation(selectedTab: $selectedTab)
                     .frame(height: 80)
                     .padding(.horizontal)
@@ -66,7 +64,6 @@ struct ContentView: View {
         .ignoresSafeArea(.keyboard)
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

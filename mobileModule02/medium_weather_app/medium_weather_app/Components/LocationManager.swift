@@ -77,8 +77,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 self.cityName = placemark.locality
                 self.countryName = placemark.country
                 self.stateName = placemark.administrativeArea
-
-//                self.locationUpdateCompletion?()
             }
         }
     }
