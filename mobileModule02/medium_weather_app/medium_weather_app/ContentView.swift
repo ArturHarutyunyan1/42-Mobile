@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var selectedTab: AppTab = .currently
     @StateObject private var handler = WeatherViewModel()
     @StateObject private var location = LocationManager()
+    @State private var hasFetchedWeather = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -45,14 +46,16 @@ struct ContentView: View {
                     .frame(height: 80)
                     .padding(.horizontal)
             }
-            .onAppear() {
+            .onAppear {
                 location.checkStatus()
             }
             .onReceive(Publishers.CombineLatest(location.$lat, location.$lon)) { lat, lon in
-                if let stringLat = lat,
+                if !hasFetchedWeather,
+                   let stringLat = lat,
                    let stringLon = lon,
                    let lat = Double(stringLat),
                    let lon = Double(stringLon) {
+                    hasFetchedWeather = true
                     Task {
                         handler.getWeatherForecast(lat: lat, lon: lon, location: location)
                     }
@@ -63,6 +66,7 @@ struct ContentView: View {
         .ignoresSafeArea(.keyboard)
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

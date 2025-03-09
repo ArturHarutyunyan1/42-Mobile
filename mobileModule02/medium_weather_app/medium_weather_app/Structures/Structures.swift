@@ -13,6 +13,7 @@ struct searchResultItem : Codable {
 
 struct WeatherData : Codable {
     let current: CurrentData
+    let hourly: HourlyData
 }
 
 struct searchResult: Codable, Identifiable {
@@ -30,7 +31,13 @@ struct CurrentData : Codable {
     let weathercode: Int
     let temperature_2m: Double
     let wind_speed_10m: Double
+}
 
+struct HourlyData : Codable {
+    let time: [String]
+    let weathercode: [Int]
+    let temperature_2m: [Double]
+    let wind_speed_10m: [Double]
 }
 
 struct LocationInfo : Codable {
@@ -39,6 +46,8 @@ struct LocationInfo : Codable {
     var city: String?
     var state: String?
     var country: String?
+    var weatherStatus: String?
+    var weatherStatuses: [String]?
     var weaterData: WeatherData?
 }
 

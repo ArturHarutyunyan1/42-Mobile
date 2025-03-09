@@ -125,7 +125,7 @@ class WeatherViewModel: ObservableObject {
         }
     }
     func getWeatherForecast(lat: Double, lon: Double, location: LocationManager) {
-        let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=temperature_2m,wind_speed_10m"
+        let endpoint = "https://api.open-meteo.com/v1/forecast?latitude=\(lat)&longitude=\(lon)&current=weathercode,temperature_2m,wind_speed_10m&hourly=weathercode,temperature_2m,wind_speed_10m"
         guard let url = URL(string: endpoint) else {
             return
         }
@@ -153,10 +153,43 @@ class WeatherViewModel: ObservableObject {
                         country: location.countryName ?? "Unknown",
                         weaterData: decodedData
                     )
+                    self.setCondition()
                 }
             } catch {
                 print("Error decoding weather data: \(error)")
             }
         }.resume()
+    }
+    func mapWeatherCodeToStatus(_ code: Int) -> String {
+        switch code {
+        case 0: return "Clear sky"
+        case 1: return "Mainly clear"
+        case 2: return "Partly cloudy"
+        case 3: return "Cloudy"
+        case 45, 48: return "Fog"
+        case 51: return "Light Drizzle"
+        case 53: return "Moderate Drizzle"
+        case 55: return "Dense Drizzle"
+        case 61: return "Light Rain"
+        case 63: return "Moderate Rain"
+        case 65: return "Heavy Rain"
+        case 71: return "Light Snow"
+        case 73: return "Moderate Snow"
+        case 75: return "Heavy Snow"
+        case 80: return "Light Showers"
+        case 81: return "Moderate Showers"
+        case 82: return "Heavy Showers"
+        case 85: return "Light Snow Showers"
+        case 86: return "Heavy Snow Showers"
+        default: return "Unknown"
+        }
+    }
+    func setCondition() {
+        if let weatherCode = locationInfo?.weaterData!.current.weathercode {
+            locationInfo?.weatherStatus = mapWeatherCodeToStatus(weatherCode)
+        }
+        if let weatherStatuses = locationInfo?.weaterData?.hourly.weathercode {
+            locationInfo?.weatherStatuses = weatherStatuses.map {mapWeatherCodeToStatus($0)}
+        }
     }
 }
