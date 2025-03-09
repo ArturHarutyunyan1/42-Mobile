@@ -10,6 +10,9 @@ import SwiftUI
 struct Search: View {
     @State private var input: String = ""
     @State private var isActive: Bool = false
+    @State private var city: String = ""
+    @State private var country: String = ""
+    @State private var state: String = ""
     @ObservedObject var handler: WeatherViewModel
     @ObservedObject var location: LocationManager
 
@@ -28,8 +31,17 @@ struct Search: View {
                     searchCity(name: input)
                 })
             Button {
-                location.checkStatus()
-                handler.setCoords(name: "", latitude: location.lat ?? "", longitude: location.lon ?? "")
+                
+                if input != "",
+                   let stringLat = location.lat,
+                   let stringLon = location.lon,
+                   let lat = Double(stringLat),
+                   let lon = Double(stringLon) {
+                    location.cityName = city
+                    location.countryName = country
+                    location.stateName = state
+                    handler.getWeatherForecast(lat: lat, lon: lon, location: location)
+                }
             } label: {
                 Image(systemName: "location.fill")
                     .foregroundColor(.blue)
@@ -79,6 +91,13 @@ struct Search: View {
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             .padding(.horizontal)
             .ignoresSafeArea(.all)
+            .onAppear() {
+                if input != "" {
+                    city = location.cityName ?? ""
+                    country = location.countryName ?? ""
+                    state = location.stateName ?? ""
+                }
+            }
         }
     }
     private func searchCity(name: String) {
