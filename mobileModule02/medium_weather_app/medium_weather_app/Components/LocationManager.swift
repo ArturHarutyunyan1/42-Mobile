@@ -15,6 +15,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var cityName: String?
     @Published var countryName: String?
     @Published var stateName: String?
+    @Published var show: Bool = false
 
     let locationManager = CLLocationManager()
     let geocoder = CLGeocoder()
@@ -41,6 +42,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
             status = true
+            show = true
         case .restricted:
             print("Location access is restricted")
             status = false

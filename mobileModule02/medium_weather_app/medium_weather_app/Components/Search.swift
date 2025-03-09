@@ -20,18 +20,23 @@ struct Search: View {
                     .foregroundColor(.gray)
                 TextField("Search...", text: $input)
                     .padding(.vertical, 10)
-                    .onChange(of: input) { newValue in
+                    .onChange(of: input) { newValue, _ in
                         isActive = !newValue.isEmpty
                         searchCity(name: newValue)
                     }
                 Button {
-                    location.locationManager.startUpdatingLocation()
-                    if !input.isEmpty,
-                       let stringLat = location.lat,
-                       let stringLon = location.lon,
-                       let lat = Double(stringLat),
-                       let lon = Double(stringLon) {
-                        handler.getWeatherForecast(lat: lat, lon: lon, location: location)
+                    if location.show == true && location.status == false {
+                        location.show = false
+                    }
+                    else {
+                        location.locationManager.startUpdatingLocation()
+                        if !input.isEmpty,
+                           let stringLat = location.lat,
+                           let stringLon = location.lon,
+                           let lat = Double(stringLat),
+                           let lon = Double(stringLon) {
+                            handler.getWeatherForecast(lat: lat, lon: lon, location: location)
+                        }
                     }
                 } label: {
                     Image(systemName: "location.fill")
@@ -63,7 +68,8 @@ struct Search: View {
                                         handler.getWeatherForecast(lat: result.latitude, lon: result.longitude, location: location)
                                         isActive = false
                                         handler.errorMessage = nil
-                                        location.status = true
+                                        location.show = true
+                                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                                     }
                                 }
                             }) {

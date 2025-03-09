@@ -23,7 +23,7 @@ struct ContentView: View {
             Search(handler: handler, location: location)
             VStack {
                 TabView(selection: $selectedTab) {
-                    if location.status == false {
+                    if location.status == false && location.show == false {
                         VStack {
                             Text("Your location services are disabled. Please enable them in your settings.")
                                 .foregroundStyle(.red)
