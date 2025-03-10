@@ -147,10 +147,34 @@ extension WeatherViewModel {
         default: return "Unknown"
         }
     }
-    
+    func mapWeatherCodeToIconName(_ code: Int) -> String {
+        switch code {
+        case 0: return "sun.max.fill"
+        case 1: return "cloud.sun.fill"
+        case 2: return "cloud.sun.fill"
+        case 3: return "cloud.fill"
+        case 45, 48: return "cloud.fog.fill"
+        case 51: return "cloud.drizzle.fill"
+        case 53: return "cloud.drizzle.fill"
+        case 55: return "cloud.drizzle.fill"
+        case 61: return "cloud.rain.fill"
+        case 63: return "cloud.rain.fill"
+        case 65: return "cloud.rain.fill"
+        case 71: return "cloud.snow.fill"
+        case 73: return "cloud.snow.fill"
+        case 75: return "cloud.snow.fill"
+        case 80: return "cloud.showers.fill"
+        case 81: return "cloud.showers.fill"
+        case 82: return "cloud.showers.fill"
+        case 85: return "cloud.snow.fill"
+        case 86: return "cloud.snow.fill"
+        default: return "questionmark.circle.fill"
+        }
+    }
     func setCondition() {
         if let weatherCode = locationInfo?.weaterData!.current.weathercode {
             locationInfo?.currentStatus = mapWeatherCodeToStatus(weatherCode)
+            locationInfo?.iconName = mapWeatherCodeToIconName(weatherCode)
         }
         if let weatherStatuses = locationInfo?.weaterData?.hourly.weathercode {
             locationInfo?.todayStatus = weatherStatuses.map { mapWeatherCodeToStatus($0) }

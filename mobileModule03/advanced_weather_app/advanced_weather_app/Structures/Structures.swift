@@ -58,6 +58,7 @@ struct LocationInfo : Codable {
     var todayStatus: [String]?
     var weeklyStatus: [String]?
     var weaterData: WeatherData?
+    var iconName: String?
 }
 
 enum apiCallError : Error {
