@@ -9,7 +9,6 @@ import SwiftUI
 struct Home: View {
     @Binding var locationInfo: LocationInfo?
     @ObservedObject var handler: WeatherViewModel
-    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {

@@ -18,6 +18,7 @@ class WeatherViewModel: ObservableObject {
     @Published var locationInfo: LocationInfo?
     @Published var errorMessage: String? = nil
     @Published var searchError: String? = nil
+    @Published var date: String?
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -105,12 +106,13 @@ class WeatherViewModel: ObservableObject {
                     self.locationInfo = LocationInfo(
                         latitude: lat,
                         longitude: lon,
-                        city: location.cityName ?? "Unknown",
-                        state: location.stateName ?? "Unknown",
-                        country: location.countryName ?? "Unknown",
+                        city: location.cityName ?? "-",
+                        state: location.stateName ?? "-",
+                        country: location.countryName ?? "-",
                         weaterData: decodedData
                     )
                     self.setCondition()
+                    self.chartData()
                 }
             } catch {
                 print("Error decoding weather data: \(error)")
@@ -181,6 +183,29 @@ extension WeatherViewModel {
         }
         if let weeklyStatuses = locationInfo?.weaterData?.daily.weather_code {
             locationInfo?.weeklyStatus = weeklyStatuses.map { mapWeatherCodeToStatus($0) }
+        }
+    }
+    func chartData () {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        date = dateFormatter.string(from: Date())
+        
+        if locationInfo?.chart == nil {
+            locationInfo?.chart = ChartData(timeValue: [], temperatureValue: [])
+        }
+        
+        if let data = locationInfo?.weaterData?.hourly {
+            for (index, fullTime) in data.time.enumerated() {
+                let time = fullTime.components(separatedBy: "T")
+                if let datePart = time.first, datePart == date {
+                    if let hour = time.last?.prefix(2), let hourInt = Int(hour), hourInt % 3 == 0 {
+                        locationInfo?.chart?.timeValue.append(time.last ?? "")
+                        if index < data.temperature_2m.count {
+                            locationInfo?.chart?.temperatureValue.append(data.temperature_2m[index])
+                        }
+                    }
+                }
+            }
         }
     }
 }

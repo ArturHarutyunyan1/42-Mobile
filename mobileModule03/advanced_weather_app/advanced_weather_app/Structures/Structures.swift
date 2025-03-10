@@ -48,6 +48,12 @@ struct DailyData : Codable {
     let temperature_2m_min: [Double]
 }
 
+struct ChartData : Identifiable, Codable {
+    let id = UUID()
+    var timeValue: [String]
+    var temperatureValue: [Double]
+}
+
 struct LocationInfo : Codable {
     var latitude: Double
     var longitude: Double
@@ -58,6 +64,7 @@ struct LocationInfo : Codable {
     var todayStatus: [String]?
     var weeklyStatus: [String]?
     var weaterData: WeatherData?
+    var chart: ChartData?
     var iconName: String?
 }
 
