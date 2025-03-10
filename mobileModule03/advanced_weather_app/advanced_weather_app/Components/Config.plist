@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ForecastAPI_URL</key>
+	<string>https://api.open-meteo.com/v1/forecast</string>
+	<key>SearchAPI_URL</key>
+	<string>https://geocoding-api.open-meteo.com/v1/search</string>
+</dict>
+</plist>

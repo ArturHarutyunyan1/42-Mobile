@@ -67,7 +67,8 @@ struct Search: View {
                         }
                     }
                     else if handler.searchResults.count > 0 {
-                        ForEach(handler.searchResults) { result in
+                        ForEach(0..<min(5, handler.searchResults.count), id: \.self) { index in
+                            let result = handler.searchResults[index]
                             Button(action: {
                                 Task {
                                     DispatchQueue.main.async {
