@@ -21,14 +21,20 @@ struct Search: View {
                 TextField("Search...", text: $input)
                     .padding(.vertical, 10)
                     .onChange(of: input) { newValue, _ in
-                        isActive = !newValue.isEmpty
-                        searchCity(name: newValue)
+                        if input != "" {
+                            isActive = !newValue.isEmpty
+                            searchCity(name: newValue)
+                        }
+                        if input == "" {
+                            isActive = false
+                        }
                     }
                 Button {
                     if location.show == true && location.status == false {
                         location.show = false
                     }
                     else {
+                        location.checkStatus()
                         location.locationManager.startUpdatingLocation()
                         if !input.isEmpty,
                            let stringLat = location.lat,
@@ -52,10 +58,12 @@ struct Search: View {
             
             if isActive {
                 ScrollView {
-                    if let error = handler.errorMessage {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .padding(.horizontal)
+                    if let error = handler.searchError {
+                        if input != "" {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .padding(.horizontal)
+                        }
                     }
                     else if handler.searchResults.count > 0 {
                         ForEach(handler.searchResults) { result in

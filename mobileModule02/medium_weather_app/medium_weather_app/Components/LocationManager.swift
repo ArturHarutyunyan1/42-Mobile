@@ -4,9 +4,9 @@
 //
 //  Created by Artur Harutyunyan on 09.03.25.
 //
-
 import SwiftUI
 import MapKit
+import CoreLocation
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var lat: String?
@@ -20,15 +20,17 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     let geocoder = CLGeocoder()
     var locationUpdateCompletion: (() -> Void)?
+    
+    var shouldRequestPermission: Bool = false
 
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        checkStatus()
     }
-
     func checkStatus() {
+        shouldRequestPermission = true
+        
         if CLLocationManager.locationServicesEnabled() {
             checkAuthorization()
             locationManager.startUpdatingLocation()
@@ -40,9 +42,11 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private func checkAuthorization() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            status = true
-            show = true
+            if shouldRequestPermission {
+                locationManager.requestWhenInUseAuthorization()
+                status = true
+                show = true
+            }
         case .restricted:
             print("Location access is restricted")
             status = false
@@ -50,6 +54,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             print("Location access is denied")
             status = false
         case .authorizedWhenInUse, .authorizedAlways:
+            status = true
+            show = true
             locationManager.startUpdatingLocation()
         @unknown default:
             break
@@ -57,24 +63,24 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkAuthorization()
+        if shouldRequestPermission {
+            checkAuthorization()
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-
         lat = String(location.coordinate.latitude)
         lon = String(location.coordinate.longitude)
         reverseGeocode(location: location)
     }
 
     private func reverseGeocode(location: CLLocation) {
-        geocoder.reverseGeocodeLocation(location) {[weak self] placemarks, error in
+        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
             guard let self = self, error == nil, let placemark = placemarks?.first else {
-                print("Unknown error")
+                print("Unknown error during reverse geocoding")
                 return
             }
-
             DispatchQueue.main.async {
                 self.cityName = placemark.locality
                 self.countryName = placemark.country
@@ -88,4 +94,3 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationManager.startUpdatingLocation()
     }
 }
-

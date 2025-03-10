@@ -17,6 +17,7 @@ class WeatherViewModel: ObservableObject {
     @Published var searchResults: [searchResult] = []
     @Published var locationInfo: LocationInfo?
     @Published var errorMessage: String? = nil
+    @Published var searchError: String? = nil
     
     func setCoords(name: String, latitude: String, longitude: String) {
         cityName = name
@@ -29,24 +30,25 @@ class WeatherViewModel: ObservableObject {
             let result = try await getSearchResults(name: name)
             await MainActor.run { [weak self] in
                 if result.results.isEmpty {
-                    self?.errorMessage = "No results found for the given city."
+                    self?.searchError = "No results found for the given city."
                 } else {
                     self?.searchResults = result.results
-                    self?.errorMessage = nil
+                    self?.searchError = nil
                 }
             }
         } catch {
             print("Error fetching search results:", error)
             await MainActor.run { [weak self] in
-                self?.errorMessage = "Error fetching search results: \(error.localizedDescription)"
+                self?.searchError = "Error fetching search results: \(error.localizedDescription)"
             }
         }
     }
 
     
     func getSearchResults(name: String) async throws -> searchResultItem {
-        let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language=en&format=json"
+        let endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=\(name)&count=10&language1=en&format=json"
         guard let url = URL(string: endpoint) else {
+            searchError = "Invalid city name"
             throw apiCallError.invalidCityName
         }
 

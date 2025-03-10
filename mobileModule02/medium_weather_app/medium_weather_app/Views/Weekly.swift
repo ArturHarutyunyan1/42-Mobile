@@ -10,8 +10,8 @@ import Foundation
 
 struct Weekly: View {
     @Binding var locationInfo: LocationInfo?
+    @ObservedObject var handler: WeatherViewModel
     @State private var date: String?
-    @StateObject private var handler = WeatherViewModel()
     var body: some View {
         if let error = handler.errorMessage {
             Text(error)

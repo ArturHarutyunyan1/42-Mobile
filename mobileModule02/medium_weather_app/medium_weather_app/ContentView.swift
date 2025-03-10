@@ -38,7 +38,9 @@ struct ContentView: View {
             
             VStack {
                 TabView(selection: $selectedTab) {
-                    if locationError || (location.status == false && location.show == false) || location.cityName == "Unknown" {
+                    if locationError ||
+                        (location.status == false && location.show == false) ||
+                        location.cityName == "Unknown" {
                         VStack {
                             Image(systemName: "location.slash.fill")
                                 .resizable()
@@ -48,11 +50,11 @@ struct ContentView: View {
                                 .font(.system(size: 32))
                         }
                     } else {
-                        Home(locationInfo: $handler.locationInfo)
+                        Home(locationInfo: $handler.locationInfo, handler: handler)
                             .tag(AppTab.currently)
-                        Today(locationInfo: $handler.locationInfo)
+                        Today(locationInfo: $handler.locationInfo, handler: handler)
                             .tag(AppTab.today)
-                        Weekly(locationInfo: $handler.locationInfo)
+                        Weekly(locationInfo: $handler.locationInfo, handler: handler)
                             .tag(AppTab.weekly)
                     }
                 }
@@ -66,15 +68,18 @@ struct ContentView: View {
             .onAppear {
                 checkInternetConnection { connection in
                     connectionStatus = connection
+                    if connection {
+                        location.checkStatus()
+                    }
                 }
-                location.checkStatus()
+            }
+            .onChange(of: connectionStatus) { status, _ in
+                if status {
+                    location.checkStatus()
+                }
             }
             .onChange(of: location.status) { newStatus, _ in
-                if newStatus == false {
-                    locationError = true
-                } else {
-                    locationError = false
-                }
+                locationError = (newStatus == false)
             }
             .onReceive(Publishers.CombineLatest(location.$lat, location.$lon)) { lat, lon in
                 if !hasFetchedWeather,
