@@ -180,6 +180,7 @@ extension WeatherViewModel {
         }
         if let weatherStatuses = locationInfo?.weaterData?.hourly.weathercode {
             locationInfo?.todayStatus = weatherStatuses.map { mapWeatherCodeToStatus($0) }
+            locationInfo?.iconsName = weatherStatuses.map { mapWeatherCodeToIconName($0) }
         }
         if let weeklyStatuses = locationInfo?.weaterData?.daily.weather_code {
             locationInfo?.weeklyStatus = weeklyStatuses.map { mapWeatherCodeToStatus($0) }

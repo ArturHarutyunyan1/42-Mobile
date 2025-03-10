@@ -53,10 +53,34 @@ struct Today: View {
                         .background(Color(.systemGray6).opacity(0.3))
                         .cornerRadius(15)
                     }
-                    ScrollView (.horizontal, showsIndicators: false) {
-                        HStack {
-                            
+                    if let data = locationInfo?.weaterData?.hourly {
+                        ScrollView (.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach (0..<data.time.count, id: \.self) {index in
+                                    let fullTime = data.time[index]
+                                    let time = fullTime.components(separatedBy: "T")
+                                    if let datePart = time.first, datePart == handler.date {
+                                        VStack {
+                                            Text("\(time.last ?? "")")
+                                            Spacer()
+                                            Image(systemName: locationInfo?.iconsName?[index] ?? "questionmark.circle")
+                                            Spacer()
+                                            Text("\(String(format: "%.1f", data.temperature_2m[index]))℃")
+                                            HStack {
+                                                Image(systemName: "wind")
+                                                Text("\(String(format: "%.1f", data.wind_speed_10m[index])) km/h")
+                                                    .foregroundColor(.white)
+                                            }
+                                        }
+                                        .padding()
+                                        .foregroundStyle(.white)
+                                        .background(Color(.systemGray6).opacity(0.3))
+                                        .cornerRadius(15)
+                                    }
+                                }
+                            }
                         }
+                        .frame(width: UIScreen.main.bounds.width * 0.9)
                     }
                 }
             }

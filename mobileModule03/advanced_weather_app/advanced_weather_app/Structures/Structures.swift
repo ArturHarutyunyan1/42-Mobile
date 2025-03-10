@@ -66,6 +66,7 @@ struct LocationInfo : Codable {
     var weaterData: WeatherData?
     var chart: ChartData?
     var iconName: String?
+    var iconsName: [String]?
 }
 
 enum apiCallError : Error {
