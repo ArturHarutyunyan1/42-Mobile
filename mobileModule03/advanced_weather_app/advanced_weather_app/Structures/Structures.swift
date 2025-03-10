@@ -52,7 +52,12 @@ struct ChartData : Identifiable, Codable {
     let id = UUID()
     var timeValue: [String]
     var temperatureValue: [Double]
+    var date: [String]
+    var min: [Double]
+    var max: [Double]
 }
+
+
 
 struct LocationInfo : Codable {
     var latitude: Double
@@ -67,6 +72,7 @@ struct LocationInfo : Codable {
     var chart: ChartData?
     var iconName: String?
     var iconsName: [String]?
+    var iconssName: [String]?
 }
 
 enum apiCallError : Error {

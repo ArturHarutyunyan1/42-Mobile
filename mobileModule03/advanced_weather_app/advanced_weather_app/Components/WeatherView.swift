@@ -165,9 +165,7 @@ extension WeatherViewModel {
         case 71: return "cloud.snow.fill"
         case 73: return "cloud.snow.fill"
         case 75: return "cloud.snow.fill"
-        case 80: return "cloud.showers.fill"
-        case 81: return "cloud.showers.fill"
-        case 82: return "cloud.showers.fill"
+        case 80, 81, 82: return "cloud.rain.fill"
         case 85: return "cloud.snow.fill"
         case 86: return "cloud.snow.fill"
         default: return "questionmark.circle.fill"
@@ -184,6 +182,7 @@ extension WeatherViewModel {
         }
         if let weeklyStatuses = locationInfo?.weaterData?.daily.weather_code {
             locationInfo?.weeklyStatus = weeklyStatuses.map { mapWeatherCodeToStatus($0) }
+            locationInfo?.iconssName = weeklyStatuses.map { mapWeatherCodeToIconName($0) }
         }
     }
     func chartData () {
@@ -192,7 +191,7 @@ extension WeatherViewModel {
         date = dateFormatter.string(from: Date())
         
         if locationInfo?.chart == nil {
-            locationInfo?.chart = ChartData(timeValue: [], temperatureValue: [])
+            locationInfo?.chart = ChartData(timeValue: [], temperatureValue: [], date: [], min: [], max: [])
         }
         
         if let data = locationInfo?.weaterData?.hourly {
@@ -205,6 +204,17 @@ extension WeatherViewModel {
                             locationInfo?.chart?.temperatureValue.append(data.temperature_2m[index])
                         }
                     }
+                }
+            }
+        }
+        
+        if let data = locationInfo?.weaterData?.daily {
+            for (index, fullTime) in data.time.enumerated() {
+                let time = fullTime.components(separatedBy: "-")
+                locationInfo?.chart?.date.append((time[1] ?? "") + "/" + (time.last ?? ""))
+                if index < data.temperature_2m_max.count {
+                    locationInfo?.chart?.max.append(data.temperature_2m_max[index])
+                    locationInfo?.chart?.min.append(data.temperature_2m_min[index])
                 }
             }
         }
