@@ -4,14 +4,16 @@
 //
 //  Created by Artur Harutyunyan on 12.03.25.
 //
-
 import SwiftUI
+import Firebase
+import FirebaseAuth
 
 struct ContentView: View {
-    @State private var isLoggedIn = false
+    @StateObject private var authenticationManager = Authentication()
+
     var body: some View {
-        if !isLoggedIn {
-            Welcome()
+        if !authenticationManager.isLoggedIn {
+            Welcome(authenticationManager: authenticationManager)
         }
     }
 }

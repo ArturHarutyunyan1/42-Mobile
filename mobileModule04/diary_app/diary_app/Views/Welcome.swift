@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Welcome: View {
+    @StateObject var authenticationManager: Authentication
     var body: some View {
         GeometryReader {geometry in
             ZStack {
@@ -27,7 +28,7 @@ struct Welcome: View {
                         .font(.custom("Snell Roundhand", size: 40))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                    NavigationLink(destination: Login()) {
+                    NavigationLink(destination: Login(authenticationManager: authenticationManager)) {
                         Text("Login")
                             .frame(width: 150, height: 50)
                             .background(.loginButton)
@@ -45,6 +46,3 @@ struct Welcome: View {
     }
 }
 
-#Preview {
-    Welcome()
-}

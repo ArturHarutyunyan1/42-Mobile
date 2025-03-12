@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct Login: View {
+    @StateObject var authenticationManager: Authentication
     var body: some View {
         VStack {
             Button(action: {
-                print("Google button")
+                Task {
+                    do {
+                        try await authenticationManager.googleOAuth()
+                    } catch AuthenticationError.runtimeError {
+                        print ("Error\n")
+                    }
+                }
             }, label: {
                 HStack {
                     Image("Google")
@@ -59,8 +66,4 @@ struct Login: View {
         }
         .navigationBarBackButtonHidden(true)
     }
-}
-
-#Preview {
-    Login()
 }
