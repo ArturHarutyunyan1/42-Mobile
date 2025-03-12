@@ -41,7 +41,13 @@ struct Login: View {
                 .padding()
             })
             Button(action: {
-                print("GitHub button")
+                Task {
+                    do {
+                        try await authenticationManager.githubAuth()
+                    } catch {
+                        print("Error")
+                    }
+                }
             }, label: {
                 HStack {
                     Image("GitHub")

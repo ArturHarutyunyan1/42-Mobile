@@ -14,6 +14,8 @@ struct ContentView: View {
     var body: some View {
         if !authenticationManager.isLoggedIn {
             Welcome(authenticationManager: authenticationManager)
+        } else {
+            Home(authenticationManager: authenticationManager)
         }
     }
 }

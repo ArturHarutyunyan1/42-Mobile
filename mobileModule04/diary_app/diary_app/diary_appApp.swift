@@ -5,23 +5,29 @@
 //  Created by Artur Harutyunyan on 12.03.25.
 //
 
-import GoogleSignIn
+import SwiftUI
 import Firebase
 import FirebaseAuth
-
-import SwiftUI
+import AuthenticationServices
 
 @main
-struct diary_appApp: App {
-    init() {
-        FirebaseApp.configure()
-    }
+struct MyApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onOpenURL {url in
-                    GIDSignIn.sharedInstance.handle(url)
-                }
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+        return true
+    }
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenExternalURLOptionsKey : Any] = [:]) -> Bool {
+        return Auth.auth().canHandle(url)
     }
 }

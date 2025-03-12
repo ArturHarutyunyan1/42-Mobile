@@ -41,4 +41,32 @@ class Authentication : ObservableObject {
         try await Auth.auth().signIn(with: credential)
         isLoggedIn = true
     }
+    func githubAuth() async throws {
+        let provider = OAuthProvider(providerID: "github.com")
+        provider.scopes = ["user:email"]
+
+        let credential: AuthCredential = try await withCheckedThrowingContinuation { continuation in
+            provider.getCredentialWith(nil) { credential, error in
+                if let error = error {
+                    print("GitHub credential error: \(error.localizedDescription)")
+                    continuation.resume(throwing: error)
+                } else if let credential = credential {
+                    print("GitHub credential obtained successfully.")
+                    continuation.resume(returning: credential)
+                } else {
+                    print("No GitHub credential returned.")
+                    continuation.resume(throwing: AuthenticationError.runtimeError("No credential returned from GitHub."))
+                }
+            }
+        }
+        let authResult = try await Auth.auth().signIn(with: credential)
+        let user = authResult.user
+        isLoggedIn = true
+    }
+
+    func googleLogOut() async throws {
+        GIDSignIn.sharedInstance.signOut()
+        try Auth.auth().signOut()
+        isLoggedIn = false
+    }
 }
