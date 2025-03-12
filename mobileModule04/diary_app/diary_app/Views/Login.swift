@@ -10,21 +10,24 @@ import SwiftUI
 struct Login: View {
     var body: some View {
         VStack {
-            Text("Choose a way to Sign in")
-                .frame(width: UIScreen.main.bounds.width * 0.9)
-                .font(.system(size: 30, weight: .bold, design: .rounded))
             Button(action: {
                 print("Google button")
             }, label: {
                 HStack {
-                    Image(systemName: "circle.fill")
+                    Image("Google")
                         .resizable()
                         .frame(width: 50, height: 50)
                         .foregroundStyle(.red)
+                    Spacer()
                     Text("Continue with Google")
+                        .font(.system(size: 20))
                         .foregroundStyle(.black)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                    Spacer()
                 }
                 .padding(10)
+                .frame(width: UIScreen.main.bounds.width * 0.7)
                 .background(Color(.systemGray6))
                 .cornerRadius(15)
                 .frame(minWidth: 200)
@@ -34,20 +37,27 @@ struct Login: View {
                 print("GitHub button")
             }, label: {
                 HStack {
-                    Image(systemName: "circle.fill")
+                    Image("GitHub")
                         .resizable()
                         .frame(width: 50, height: 50)
                         .foregroundStyle(.black)
+                    Spacer()
                     Text("Continue with GitHub")
                         .foregroundStyle(.black)
+                        .font(.system(size: 20))
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                    Spacer()
                 }
                 .padding(10)
+                .frame(width: UIScreen.main.bounds.width * 0.7)
                 .background(Color(.systemGray6))
                 .cornerRadius(15)
                 .frame(minWidth: 200)
                 .padding()
             })
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

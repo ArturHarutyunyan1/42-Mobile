@@ -9,15 +9,15 @@ import SwiftUI
 
 struct Welcome: View {
     var body: some View {
-        NavigationStack {
+        GeometryReader {geometry in
             ZStack {
                 Image("LoginBackground")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                    .frame(width: geometry.size.width, height: geometry.size.height * 1.1)
                     .ignoresSafeArea(.all)
                     .overlay(Color.black.opacity(0.3))
-                VStack {
+                NavigationStack {
                     Text("Welcome to your")
                         .font(.custom("Snell Roundhand", size: 34))
                         .fontWeight(.bold)
@@ -36,8 +36,8 @@ struct Welcome: View {
                             .shadow(radius: 5)
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.8, height: 300)
-                .background(Color.white.opacity(0.85))
+                .frame(width: geometry.size.width * 0.8, height: 300)
+                .background(.white)
                 .cornerRadius(20)
                 .shadow(radius: 10)
             }
