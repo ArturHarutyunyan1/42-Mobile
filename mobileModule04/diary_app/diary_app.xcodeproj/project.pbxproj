@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F30E6D802D81B57000643239 /* .gitignore in Sources */ = {isa = PBXBuildFile; fileRef = F30E6D7F2D81B57000643239 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		F30E6D7F2D81B57000643239 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		F387D0732D8182D600D3B91D /* diary_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = diary_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -32,6 +37,7 @@
 		F387D06A2D8182D600D3B91D = {
 			isa = PBXGroup;
 			children = (
+				F30E6D7F2D81B57000643239 /* .gitignore */,
 				F387D0752D8182D600D3B91D /* diary_app */,
 				F387D0742D8182D600D3B91D /* Products */,
 			);
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F30E6D802D81B57000643239 /* .gitignore in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
