@@ -17,9 +17,13 @@ enum AuthenticationError : Error {
 @MainActor
 class Authentication : ObservableObject {
     @Published var isLoggedIn = false
+    @Published var userEmail = ""
     
     init() {
         self.isLoggedIn = (Auth.auth().currentUser != nil)
+        if let savedEmail = UserDefaults.standard.string(forKey: "userEmail") {
+            self.userEmail = savedEmail
+        }
     }
     
     func googleOAuth() async throws {
@@ -39,6 +43,8 @@ class Authentication : ObservableObject {
         }
         let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
         try await Auth.auth().signIn(with: credential)
+        self.userEmail = user.profile?.email ?? ""
+        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
         isLoggedIn = true
     }
     func githubAuth() async throws {
@@ -61,10 +67,12 @@ class Authentication : ObservableObject {
         }
         let authResult = try await Auth.auth().signIn(with: credential)
         let user = authResult.user
+        self.userEmail = user.email ?? ""
+        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
         isLoggedIn = true
     }
 
-    func googleLogOut() async throws {
+    func logOut() async throws {
         GIDSignIn.sharedInstance.signOut()
         try Auth.auth().signOut()
         isLoggedIn = false

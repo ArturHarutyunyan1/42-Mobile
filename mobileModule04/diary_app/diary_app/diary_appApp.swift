@@ -8,15 +8,17 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
-import AuthenticationServices
+import AuthenticationServices 
 
 @main
 struct MyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject var dataManager = DataManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(dataManager)
         }
     }
 }

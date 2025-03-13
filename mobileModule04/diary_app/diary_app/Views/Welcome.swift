@@ -14,8 +14,9 @@ struct Welcome: View {
             ZStack {
                 Image("LoginBackground")
                     .resizable()
+                    .scaledToFill()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: geometry.size.width, height: geometry.size.height * 1.1)
+                    .frame(width: geometry.size.width, height: UIScreen.main.bounds.height)
                     .ignoresSafeArea(.all)
                     .overlay(Color.black.opacity(0.3))
                 NavigationStack {
@@ -43,6 +44,6 @@ struct Welcome: View {
                 .shadow(radius: 10)
             }
         }
+        .background(.loginButton)
     }
 }
-
