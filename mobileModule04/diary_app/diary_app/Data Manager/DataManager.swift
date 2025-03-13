@@ -41,4 +41,33 @@ class DataManager : ObservableObject {
             }
         }
     }
+    func addNote(feeling: String, text: String, title: String, usermail: String) {
+        let db = Firestore.firestore()
+        let ref = db.collection("notes").document()
+        
+        let noteData: [String: Any] = [
+            "date": getDate(),
+            "feeling": feeling,
+            "text": text,
+            "title": title,
+            "usermail": usermail
+        ]
+        ref.setData(noteData) {error in
+            if let error = error {
+                print("Error adding document: \(error)")
+            } else {
+                print("\(UserDefaults.standard.string(forKey: "userMail") ?? "")")
+                print("Document added successfully!")
+            }
+        }
+    }
+    func getDate() -> String {
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .medium
+        let formattedDate = dateFormatter.string(from: currentDate)
+        return formattedDate
+    }
 }
