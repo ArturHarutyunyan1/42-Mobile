@@ -61,6 +61,8 @@ struct NoteDetails: View {
                     .foregroundStyle(.vernagir)
                     .font(.system(size: 20))
                     .frame(height: 50)
+                Text("\(noteDetails?.date ?? "")")
+                    .foregroundStyle(.vernagir)
                 TextEditor(text: Binding(
                     get: {noteDetails?.text ?? ""},
                     set: {noteDetails?.text = $0}
@@ -74,7 +76,7 @@ struct NoteDetails: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
             .background(color)
         }
-        .alert("Delete note \(noteDetails?.title ?? "")",isPresented: $deleteAlert) {
+        .alert("Delete note \(noteDetails?.title ?? "")?",isPresented: $deleteAlert) {
             Button(action: {
                 if let noteDetails = noteDetails {
                     Task {

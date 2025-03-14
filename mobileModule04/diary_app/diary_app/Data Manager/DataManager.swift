@@ -42,11 +42,9 @@ class DataManager : ObservableObject {
             }
         }
     }
-    func addNote(feeling: String, text: String, title: String, usermail: String) {
+    func addNote(feeling: String, text: String, title: String, usermail: String, color: String) {
         let db = Firestore.firestore()
         let ref = db.collection("notes").document()
-        let colors: [String] = [".cyanBackground", ".yellowBackground", ".greenBackground", ".pinkBackground", ".purpleBackground", ".redBackground"]
-        let color = colors.randomElement() ?? ".blue"
         
         let noteData: [String: Any] = [
             "date": getDate(),

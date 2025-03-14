@@ -11,7 +11,8 @@ import MasonryStack
 struct Home: View {
     @EnvironmentObject var dataManager: DataManager
     @StateObject var authenticationManager: Authentication
-    @State private var showPopup = false
+    @State private var showPopup = true
+    
     @State private var showDetails = false
     @State private var noteColors: [String: Color] = [:]
     @State private var noteDetails: Notes?
