@@ -11,6 +11,7 @@ struct NoteDetails: View {
     @Binding var noteDetails: Notes?
     @EnvironmentObject var dataManager: DataManager
     @State private var showAlert = false
+    @State private var deleteAlert = false
     var onNoteDeleted: () -> Void
     var body: some View {
         GeometryReader {geometry in
@@ -23,6 +24,7 @@ struct NoteDetails: View {
                     Spacer()
                     Menu {
                         Button(action: {
+                            deleteAlert = true
                         }, label: {
                             Text("Delete")
                         })
@@ -71,6 +73,21 @@ struct NoteDetails: View {
             .padding()
             .frame(width: geometry.size.width, height: geometry.size.height)
             .background(color)
+        }
+        .alert("Delete note \(noteDetails?.title ?? "")",isPresented: $deleteAlert) {
+            Button(action: {
+                if let noteDetails = noteDetails {
+                    Task {
+                        dataManager.deleteNote(note: noteDetails)
+                        onNoteDeleted()
+                    }
+                }
+
+            }, label: {
+                Text("Delete")
+                    .foregroundStyle(.red)
+            })
+            Button("Canclel", role: .cancel) {}
         }
     }
 }
