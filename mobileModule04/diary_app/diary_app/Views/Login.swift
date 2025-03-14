@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Login: View {
     @StateObject var authenticationManager: Authentication
+    @State private var errorAlert = false
+    @State private var errorMessage = ""
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -17,8 +19,12 @@ struct Login: View {
                     Task {
                         do {
                             try await authenticationManager.googleOAuth()
-                        } catch AuthenticationError.runtimeError {
-                            print ("Error\n")
+                        } catch let error as AuthenticationError {
+                            errorMessage = error.localizedDescription
+                            errorAlert = true
+                        } catch {
+                            errorMessage = error.localizedDescription
+                            errorAlert = true
                         }
                     }
                 }, label: {
@@ -46,8 +52,12 @@ struct Login: View {
                     Task {
                         do {
                             try await authenticationManager.githubAuth()
+                        } catch let error as AuthenticationError {
+                            errorMessage = error.localizedDescription
+                            errorAlert = true
                         } catch {
-                            print("Error")
+                            errorMessage = error.localizedDescription
+                            errorAlert = true
                         }
                     }
                 }, label: {
@@ -75,6 +85,9 @@ struct Login: View {
             }
             .padding()
             .navigationBarBackButtonHidden(true)
+            .alert(errorMessage, isPresented: $errorAlert) {
+                Button("OK", role: .cancel) {}
+            }
         }
     }
 }

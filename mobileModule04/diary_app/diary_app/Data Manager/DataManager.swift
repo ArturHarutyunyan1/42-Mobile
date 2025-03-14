@@ -12,6 +12,7 @@ import FirebaseFirestoreInternal
 
 class DataManager : ObservableObject {
     @Published var diary: [Notes] = []
+    @Published var errorMessage: String?
     
     init() {
         getNotes()
@@ -23,7 +24,7 @@ class DataManager : ObservableObject {
         let ref = db.collection("notes")
         ref.getDocuments {snapshot, error in
             if let error = error {
-                print("Error getting documents: \(error)")
+                self.errorMessage = error.localizedDescription
             }
             if let snapshot = snapshot {
                 for document in snapshot.documents {
@@ -56,7 +57,7 @@ class DataManager : ObservableObject {
         ]
         ref.setData(noteData) {error in
             if let error = error {
-                print("Error adding document: \(error)")
+                self.errorMessage = error.localizedDescription
             } else {
                 print("\(UserDefaults.standard.string(forKey: "userMail") ?? "")")
                 print("Document added successfully!")
@@ -70,7 +71,7 @@ class DataManager : ObservableObject {
         
         ref.delete {error in
             if let error = error {
-                print("Error white deleting note \(error)")
+                self.errorMessage = error.localizedDescription
             } else {
                 print("Deleted successfully")
             }
@@ -90,7 +91,7 @@ class DataManager : ObservableObject {
         ]
         ref.updateData(updatedData) {error in
             if let error = error {
-                print("Something went wrong while updating note \(error)")
+                self.errorMessage = error.localizedDescription
             } else {
                 print("Note updated successfully!")
             }

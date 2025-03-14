@@ -12,6 +12,8 @@ struct NoteDetails: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var showAlert = false
     @State private var deleteAlert = false
+    @State private var errorAlert = false
+    @State private var errorMessage = ""
     var onNoteDeleted: () -> Void
     var body: some View {
         GeometryReader {geometry in
@@ -90,6 +92,15 @@ struct NoteDetails: View {
                     .foregroundStyle(.red)
             })
             Button("Canclel", role: .cancel) {}
+        }
+        .alert(errorMessage, isPresented: $errorAlert) {
+            Button("OK", role: .cancel) {}
+        }
+        .onReceive(dataManager.$errorMessage) { error in
+            if let error = error, !error.isEmpty {
+                errorMessage = error
+                errorAlert = true
+            }
         }
     }
 }

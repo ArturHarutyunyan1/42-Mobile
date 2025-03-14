@@ -13,9 +13,10 @@ struct Note: View {
     @State private var title: String = ""
     @State private var feeling: String = ""
     @State private var text: String = ""
+    @State private var color = ""
+    @State private var errorMessage = ""
     @State private var errorAlert = false
     let colors: [String] = [".cyanBackground", ".yellowBackground", ".greenBackground", ".pinkBackground", ".purpleBackground", ".redBackground"]
-    @State private var color = ""
     var onNoteAdded: () -> Void
     var body: some View {
         GeometryReader {geometry in
@@ -27,6 +28,7 @@ struct Note: View {
                             dataManager.addNote(feeling: feeling, text: text, title: title, usermail: auth.userEmail, color: color)
                             onNoteAdded()
                         } else {
+                            errorMessage = "Fields can't be empty!"
                             errorAlert = true
                         }
                     }, label: {
@@ -46,7 +48,6 @@ struct Note: View {
                         .scrollContentBackground(.hidden)
                         .foregroundStyle(.bovandakutyun)
                         .font(.system(size: 25))
-                        .frame(height: .infinity)
                     if text.isEmpty {
                         Text("Text")
                             .font(.system(size: 25))
@@ -59,11 +60,17 @@ struct Note: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .background(dataManager.stringToColor(color))
-        .alert("Fields can't be empty", isPresented: $errorAlert) {
+        .alert(errorMessage, isPresented: $errorAlert) {
             Button("OK", role :.cancel) {}
         }
         .onAppear {
             color = colors.randomElement() ?? ".blue"
+        }
+        .onReceive(dataManager.$errorMessage) { error in
+            if let error = error, !error.isEmpty {
+                errorMessage = error
+                errorAlert = true
+            }
         }
     }
 }

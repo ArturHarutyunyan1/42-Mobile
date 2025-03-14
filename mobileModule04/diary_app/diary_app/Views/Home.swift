@@ -11,8 +11,7 @@ import MasonryStack
 struct Home: View {
     @EnvironmentObject var dataManager: DataManager
     @StateObject var authenticationManager: Authentication
-    @State private var showPopup = true
-    
+    @State private var showPopup = false
     @State private var showDetails = false
     @State private var noteColors: [String: Color] = [:]
     @State private var noteDetails: Notes?
@@ -21,7 +20,7 @@ struct Home: View {
     }
     var body: some View {
         VStack {
-            Navigation()
+            Navigation(authManager: authenticationManager)
             ScrollView {
                 if userNotesCount < 1 {
                     Text("No recent notes")
