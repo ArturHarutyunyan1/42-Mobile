@@ -17,7 +17,7 @@ enum AuthenticationError : Error {
 @MainActor
 class Authentication : ObservableObject {
     @Published var isLoggedIn = true
-    @Published var userEmail = "arturhar2004@gmail.com"
+    @Published var userEmail = "arturhar@outlook.com"
     
 //    init() {
 //        self.isLoggedIn = (Auth.auth().currentUser != nil)

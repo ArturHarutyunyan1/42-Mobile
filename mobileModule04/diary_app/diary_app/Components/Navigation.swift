@@ -13,9 +13,9 @@ struct Navigation: View {
             Text("Recent Notes")
                 .font(.headline)
             Spacer()
-            Image(systemName: "circle.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
+//            Image(systemName: "circle.fill")
+//                .resizable()
+//                .frame(width: 30, height: 30)
         }
         .padding()
         .frame(height: 50)

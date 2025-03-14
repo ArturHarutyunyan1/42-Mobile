@@ -12,30 +12,44 @@ struct Home: View {
     @EnvironmentObject var dataManager: DataManager
     @StateObject var authenticationManager: Authentication
     @State private var showPopup = false
-    let colors: [Color] = [.cyanBackground, .yellowBackground, .greenBackground, .pinkBackground, .purpleBackground, .redBackground]
-    let columns = [GridItem(.flexible()), GridItem(.flexible())]
-
+    @State private var showDetails = false
+    @State private var noteColors: [String: Color] = [:]
+    @State private var noteDetails: Notes?
+    var userNotesCount: Int {
+        dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }.count
+    }
     var body: some View {
         VStack {
             Navigation()
             ScrollView {
-                MasonryVStack(columns: 2, spacing: 20) {
-                    ForEach(dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }, id: \.date) { note in
-                        let randomColor = colors.randomElement() ?? .blue
-                        VStack(alignment: .leading) {
-                            Text(note.title)
-                                .font(.headline)
-                            Text(note.text)
-                                .fixedSize(horizontal: false, vertical: true)
+                if userNotesCount < 1 {
+                    Text("No recent notes")
+                } else {
+                    MasonryVStack(columns: 2, spacing: 20) {
+                        ForEach(dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }, id: \.id) { note in
+                            let color = dataManager.stringToColor(note.style)
+                            Button(action: {
+                                showDetails = true
+                                noteDetails = note
+                            }, label: {
+                                VStack(alignment: .leading) {
+                                    Text(note.title)
+                                        .font(.headline)
+                                        .foregroundStyle(.vernagir)
+                                    Text(note.text)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .foregroundStyle(.bovandakutyun)
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(10)
+                                .background(color)
+                                .cornerRadius(15)
+                            })
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .lineLimit(10)
-                        .background(randomColor)
-                        .cornerRadius(15)
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
             }
             Button(action: {
                 showPopup = true
@@ -51,7 +65,11 @@ struct Home: View {
             .sheet(isPresented: $showPopup) {
                 Note(auth: authenticationManager, onNoteAdded: {
                     showPopup = false
+                    dataManager.getNotes()
                 })
+            }
+            .sheet(isPresented: $showDetails) {
+                NoteDetails(noteDetails: $noteDetails)
             }
             Spacer()
         }

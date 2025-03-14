@@ -34,8 +34,9 @@ class DataManager : ObservableObject {
                     let text = data["text"] as? String ?? ""
                     let title = data["title"] as? String ?? ""
                     let usermail = data["usermail"] as? String ?? ""
+                    let style = data["style"] as? String ?? ""
                     
-                    let note = Notes(date: date, feeling: feeling, text: text, title: title, usermail: usermail)
+                    let note = Notes(date: date, feeling: feeling, text: text, title: title, usermail: usermail, style: style)
                     self.diary.append(note)
                 }
             }
@@ -44,13 +45,16 @@ class DataManager : ObservableObject {
     func addNote(feeling: String, text: String, title: String, usermail: String) {
         let db = Firestore.firestore()
         let ref = db.collection("notes").document()
+        let colors: [String] = [".cyanBackground", ".yellowBackground", ".greenBackground", ".pinkBackground", ".purpleBackground", ".redBackground"]
+        let color = colors.randomElement() ?? ".blue"
         
         let noteData: [String: Any] = [
             "date": getDate(),
             "feeling": feeling,
             "text": text,
             "title": title,
-            "usermail": usermail
+            "usermail": usermail,
+            "style": color
         ]
         ref.setData(noteData) {error in
             if let error = error {
@@ -69,5 +73,23 @@ class DataManager : ObservableObject {
         dateFormatter.timeStyle = .medium
         let formattedDate = dateFormatter.string(from: currentDate)
         return formattedDate
+    }
+    func stringToColor(_ string: String) -> Color {
+        switch (string) {
+        case ".cyanBackground":
+            return .cyanBackground
+        case ".yellowBackground":
+            return .yellowBackground
+        case ".greenBackground":
+            return .greenBackground
+        case ".pinkBackground":
+            return .pinkBackground
+        case ".purpleBackground":
+            return .purpleBackground
+        case ".redBackground":
+            return .redBackground
+        default:
+            return .blue
+        }
     }
 }

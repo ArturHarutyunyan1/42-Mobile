@@ -8,11 +8,12 @@
 import Foundation
 
 
-struct Notes : Codable, Identifiable, Equatable {
+struct Notes : Codable, Identifiable {
     var id = UUID()
     var date: String
     var feeling: String
     var text: String
     var title: String
     var usermail: String
+    var style: String
 }
