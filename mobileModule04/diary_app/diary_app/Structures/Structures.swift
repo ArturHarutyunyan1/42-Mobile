@@ -8,7 +8,8 @@
 import Foundation
 
 
-struct Notes : Codable {
+struct Notes : Codable, Identifiable, Equatable {
+    var id = UUID()
     var date: String
     var feeling: String
     var text: String

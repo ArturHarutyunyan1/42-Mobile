@@ -13,6 +13,7 @@
 		F30E6D8A2D81B79700643239 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F30E6D892D81B79700643239 /* FirebaseAuth */; };
 		F30E6D8C2D81B79700643239 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F30E6D8B2D81B79700643239 /* FirebaseCore */; };
 		F30E6D8E2D81B79700643239 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F30E6D8D2D81B79700643239 /* FirebaseDatabase */; };
+		F32966592D8463D200B9A293 /* MasonryStack in Frameworks */ = {isa = PBXBuildFile; productRef = F32966582D8463D200B9A293 /* MasonryStack */; };
 		F394FE762D82EFE20060F9E5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = F394FE752D82EFE20060F9E5 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F30E6D8E2D81B79700643239 /* FirebaseDatabase in Frameworks */,
+				F32966592D8463D200B9A293 /* MasonryStack in Frameworks */,
 				F30E6D852D81B72900643239 /* GoogleSignIn in Frameworks */,
 				F30E6D8A2D81B79700643239 /* FirebaseAuth in Frameworks */,
 				F30E6D8C2D81B79700643239 /* FirebaseCore in Frameworks */,
@@ -89,6 +91,7 @@
 				F30E6D8B2D81B79700643239 /* FirebaseCore */,
 				F30E6D8D2D81B79700643239 /* FirebaseDatabase */,
 				F394FE752D82EFE20060F9E5 /* FirebaseFirestore */,
+				F32966582D8463D200B9A293 /* MasonryStack */,
 			);
 			productName = diary_app;
 			productReference = F387D0732D8182D600D3B91D /* diary_app.app */;
@@ -121,6 +124,7 @@
 			packageReferences = (
 				F30E6D832D81B72900643239 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				F30E6D882D81B79700643239 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				F32966572D8463D200B9A293 /* XCRemoteSwiftPackageReference "MasonryStack" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F387D0742D8182D600D3B91D /* Products */;
@@ -375,6 +379,14 @@
 				minimumVersion = 11.9.0;
 			};
 		};
+		F32966572D8463D200B9A293 /* XCRemoteSwiftPackageReference "MasonryStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lukepistrol/MasonryStack.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -402,6 +414,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F30E6D882D81B79700643239 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		F32966582D8463D200B9A293 /* MasonryStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F32966572D8463D200B9A293 /* XCRemoteSwiftPackageReference "MasonryStack" */;
+			productName = MasonryStack;
 		};
 		F394FE752D82EFE20060F9E5 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;

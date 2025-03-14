@@ -16,15 +16,15 @@ enum AuthenticationError : Error {
 
 @MainActor
 class Authentication : ObservableObject {
-    @Published var isLoggedIn = false
-    @Published var userEmail = ""
+    @Published var isLoggedIn = true
+    @Published var userEmail = "arturhar2004@gmail.com"
     
-    init() {
-        self.isLoggedIn = (Auth.auth().currentUser != nil)
-        if let savedEmail = UserDefaults.standard.string(forKey: "userEmail") {
-            self.userEmail = savedEmail
-        }
-    }
+//    init() {
+//        self.isLoggedIn = (Auth.auth().currentUser != nil)
+//        if let savedEmail = UserDefaults.standard.string(forKey: "userEmail") {
+//            self.userEmail = savedEmail
+//        }
+//    }
     
     func googleOAuth() async throws {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
@@ -43,8 +43,8 @@ class Authentication : ObservableObject {
         }
         let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
         try await Auth.auth().signIn(with: credential)
-        self.userEmail = user.profile?.email ?? ""
-        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
+//        self.userEmail = user.profile?.email ?? ""
+//        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
         isLoggedIn = true
     }
     func githubAuth() async throws {
@@ -67,8 +67,8 @@ class Authentication : ObservableObject {
         }
         let authResult = try await Auth.auth().signIn(with: credential)
         let user = authResult.user
-        self.userEmail = user.email ?? ""
-        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
+//        self.userEmail = user.email ?? ""
+//        UserDefaults.standard.set(self.userEmail, forKey: "userEmail")
         isLoggedIn = true
     }
 

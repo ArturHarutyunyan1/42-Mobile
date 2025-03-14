@@ -1,5 +1,5 @@
 {
-  "originHash" : "5950e6b9fec2fd303add7ba1ab29d870e7d43fc58206c729d1a6f47d0ca14c47",
+  "originHash" : "39f71e74718dbe2111aa966713ea229189137657e9a36c96bacbd193981fe743",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -116,6 +116,15 @@
       "state" : {
         "revision" : "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
         "version" : "1.22.5"
+      }
+    },
+    {
+      "identity" : "masonrystack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lukepistrol/MasonryStack.git",
+      "state" : {
+        "revision" : "d0901713a72febe9bee7b8db5af6fb5d63362ab8",
+        "version" : "0.1.0"
       }
     },
     {

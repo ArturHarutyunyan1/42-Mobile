@@ -10,6 +10,7 @@ import FirebaseAuth
 
 struct ContentView: View {
     @StateObject private var authenticationManager = Authentication()
+    @EnvironmentObject var dataManager: DataManager
 
     var body: some View {
         if !authenticationManager.isLoggedIn {
@@ -23,4 +24,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(DataManager())
 }
