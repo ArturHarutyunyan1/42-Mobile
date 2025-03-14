@@ -9,7 +9,7 @@ import Foundation
 
 
 struct Notes : Codable, Identifiable {
-    var id = UUID()
+    var id: String
     var date: String
     var feeling: String
     var text: String

@@ -10,6 +10,8 @@ import SwiftUI
 struct NoteDetails: View {
     @Binding var noteDetails: Notes?
     @EnvironmentObject var dataManager: DataManager
+    @State private var showAlert = false
+    var onNoteDeleted: () -> Void
     var body: some View {
         GeometryReader {geometry in
             let color = DataManager().stringToColor(noteDetails?.style ?? "")
@@ -19,19 +21,44 @@ struct NoteDetails: View {
                         .foregroundStyle(.darkBlue)
                         .font(.system(size: 20))
                     Spacer()
-                    Button(action: {
-                        
-                    }, label: {
-                        Image(systemName: "trash")
-                            .resizable()
-                            .frame(width: 25, height: 25)
-                    })
-                    .foregroundStyle(.red)
+                    Menu {
+                        Button(action: {
+                        }, label: {
+                            Text("Delete")
+                        })
+                        Button(action: {
+                            if let noteDetails = noteDetails {
+                                Task {
+                                    dataManager.editNote(note: noteDetails)
+                                    onNoteDeleted()
+                                }
+                            }
+                        }, label: {
+                            Text("Save")
+                        })
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .foregroundColor(.black)
+                            .font(.title)
+                    }
                 }
-                Text("\(noteDetails?.title ?? "")")
+                TextEditor(text: Binding(
+                    get: {noteDetails?.title ?? ""},
+                    set: {noteDetails?.title = $0}
+                ))
+                    .scrollContentBackground(.hidden)
                     .foregroundStyle(.vernagir)
                     .font(.system(size: 35))
                     .fontWeight(.bold)
+                    .frame(height: 50)
+                TextEditor(text: Binding(
+                    get: {noteDetails?.feeling ?? ""},
+                    set: {noteDetails?.feeling = $0}
+                ))
+                .scrollContentBackground(.hidden)
+                    .foregroundStyle(.vernagir)
+                    .font(.system(size: 20))
+                    .frame(height: 50)
                 TextEditor(text: Binding(
                     get: {noteDetails?.text ?? ""},
                     set: {noteDetails?.text = $0}

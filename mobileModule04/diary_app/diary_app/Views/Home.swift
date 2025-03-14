@@ -69,7 +69,10 @@ struct Home: View {
                 })
             }
             .sheet(isPresented: $showDetails) {
-                NoteDetails(noteDetails: $noteDetails)
+                NoteDetails(noteDetails: $noteDetails, onNoteDeleted: {
+                    showDetails = false
+                    dataManager.getNotes()
+                })
             }
             Spacer()
         }
