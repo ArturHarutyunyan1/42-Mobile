@@ -11,10 +11,14 @@ import GoogleSignIn
 import FirebaseCore
 import MasonryStack
 
+enum AppTab : CaseIterable, Hashable {
+    case home, calendar
+}
+
 struct Home: View {
     @StateObject var authenticationManager: Authentication
     @EnvironmentObject var dataManager: DataManager
-    
+    @State private var selectedTab: AppTab = .home
     @State private var logoutAlert = false
     @State private var errorAlert = false
     @State private var showDetails = false
@@ -28,18 +32,44 @@ struct Home: View {
     }
     
     var body: some View {
-        ScrollView {
-            HeaderView()
-            UserInfoView()
-            LastEntriesView()
-            FeelingStatisticsView()
-        }
-        FloatingAddButton()
+        VStack {
+            TabView(selection: $selectedTab) {
+                ScrollView {
+                    HeaderView()
+                    UserInfoView()
+                    
+                    if userNotesCount > 0 {
+                        LastEntriesView()
+                        FeelingStatisticsView()
+                    } else {
+                        Text("No recent notes")
+                            .font(.body)
+                            .foregroundColor(.gray)
+                            .padding()
+                    }
+                }
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+                .tag(AppTab.home)
+                Calendar()
+                    .tabItem {
+                        Label("Calendar", systemImage: "calendar")
+                    }
+                    .tag(AppTab.calendar)
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .animation(.easeInOut(duration: 0.3), value: selectedTab)
             .onAppear {
                 authenticationManager.setUserData()
                 updateFeelings()
             }
-        .onChange(of: dataManager.diary.count) { updateFeelings() }
+            .onChange(of: dataManager.diary.count) { _ in
+                updateFeelings()
+            }
+            FloatingAddButton()
+                .padding()
+        }
     }
     
     private func HeaderView() -> some View {
@@ -53,6 +83,26 @@ struct Home: View {
             }
         }
         .padding()
+        .alert("Are you sure you want to log out?",isPresented: $logoutAlert) {
+            Button(action: {
+                Task {
+                    do {
+                        try await authenticationManager.logOut()
+                    } catch {
+                        errorAlert = true
+                    }
+                }
+            }, label: {
+                Text("Yes")
+            })
+            Button("Cancel", role: .cancel) {}
+        }
+        .alert("Something went wrong, try again!",isPresented: $errorAlert) {
+            Button("Cancel", role: .cancel) {
+                errorAlert = false
+                logoutAlert = false
+            }
+        }
     }
     
     private func UserInfoView() -> some View {
@@ -103,6 +153,7 @@ struct Home: View {
                     NoteEntryView(note: note)
                 }
                 .padding(.horizontal)
+                .lineLimit(10)
             }
         }
     }
@@ -118,15 +169,40 @@ struct Home: View {
     }
     
     private func FloatingAddButton() -> some View {
-        Button(action: { showPopup = true }) {
-            Image(systemName: "plus")
-                .resizable()
-                .frame(width: 30, height: 30)
-                .foregroundStyle(.white)
+        VStack {
+            Button(action: { showPopup = true }) {
+                Image(systemName: "plus")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 50, height: 50)
+            .background(.red)
+            .cornerRadius(100)
+            GeometryReader {geometry in
+                HStack {
+                    Button(action: {selectedTab = .home}, label: {
+                        VStack {
+                            Image(systemName: "person")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("Profile")
+                        }
+                    })
+                    .frame(width: geometry.size.width * 0.5)
+                    Button(action: {selectedTab = .calendar}, label: {
+                        VStack {
+                            Image(systemName: "calendar")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                            Text("Calendar")
+                        }
+                    })
+                    .frame(width: geometry.size.width * 0.5)
+                }
+            }
+            .frame(maxHeight: 50)
         }
-        .frame(width: 50, height: 50)
-        .background(.red)
-        .cornerRadius(100)
         .sheet(isPresented: $showPopup) {
             Note(auth: authenticationManager, onNoteAdded: {
                 showPopup = false
