@@ -28,6 +28,8 @@ struct Home: View {
                     MasonryVStack(columns: 2, spacing: 20) {
                         ForEach(dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }, id: \.id) { note in
                             let color = dataManager.stringToColor(note.style)
+                            let mood = note.feeling.components(separatedBy: " ").first ?? "Mood"
+                            let date = note.date.components(separatedBy: " ")
                             Button(action: {
                                 showDetails = true
                                 noteDetails = note
@@ -36,12 +38,17 @@ struct Home: View {
                                     Text(note.title)
                                         .font(.headline)
                                         .foregroundStyle(.vernagir)
-                                    Text(note.feeling)
+                                    Text(mood)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .foregroundStyle(.bovandakutyun)
                                     Text(note.text)
                                         .fixedSize(horizontal: false, vertical: true)
                                         .foregroundStyle(.bovandakutyun)
+                                    HStack {
+                                        Spacer()
+                                        Text("\(date[0]) \(date[1]) \(date[2])")
+                                            .foregroundStyle(.bovandakutyun)
+                                    }
                                 }
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
