@@ -55,16 +55,17 @@ struct NoteDetails: View {
                     .font(.system(size: 35))
                     .fontWeight(.bold)
                     .frame(height: 50)
-                TextEditor(text: Binding(
-                    get: {noteDetails?.feeling ?? ""},
-                    set: {noteDetails?.feeling = $0}
-                ))
-                .scrollContentBackground(.hidden)
-                    .foregroundStyle(.vernagir)
-                    .font(.system(size: 20))
-                    .frame(height: 50)
-                Text("\(noteDetails?.date ?? "")")
-                    .foregroundStyle(.vernagir)
+                HStack {
+                    Text("\(noteDetails?.feeling ?? "")")
+                        .foregroundStyle(.vernagir)
+                        .font(.system(size: 20))
+                    Spacer()
+                }
+                HStack {
+                    Text("\(noteDetails?.date ?? "")")
+                        .foregroundStyle(.vernagir)
+                    Spacer()
+                }
                 TextEditor(text: Binding(
                     get: {noteDetails?.text ?? ""},
                     set: {noteDetails?.text = $0}

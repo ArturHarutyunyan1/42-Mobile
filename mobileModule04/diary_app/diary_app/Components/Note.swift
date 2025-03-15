@@ -39,10 +39,22 @@ struct Note: View {
                     .font(.system(size: 35))
                     .fontWeight(.bold)
                     .foregroundStyle(.vernagir)
-                TextField("Feeling", text: $feeling)
-                    .font(.system(size: 30))
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.vernagir)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(["😊 Happy", "😢 Sad", "😠 Angry", "😌 Calm", "😍 Loved", "🤯 Stressed"], id: \.self) { mood in
+                            Button(action: {
+                                feeling = mood
+                            }) {
+                                Text(mood)
+                                    .padding()
+                                    .background(feeling == mood ? Color.blue.opacity(0.7) : Color.gray.opacity(0.3))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                    .padding(.vertical)
+                }
                 ZStack (alignment: .topLeading){
                     TextEditor(text: $text)
                         .scrollContentBackground(.hidden)
