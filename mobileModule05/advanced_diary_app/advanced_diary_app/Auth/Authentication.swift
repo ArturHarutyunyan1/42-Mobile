@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseCore
 
 enum AuthenticationError : Error {
     case runtimeError(String)
@@ -18,12 +19,14 @@ enum AuthenticationError : Error {
 class Authentication : ObservableObject {
     @Published var isLoggedIn = false
     @Published var userEmail = ""
+    @Published var userData: UserData
     
     init() {
         self.isLoggedIn = (Auth.auth().currentUser != nil)
         if let savedEmail = UserDefaults.standard.string(forKey: "userEmail") {
             self.userEmail = savedEmail
         }
+        userData = UserData(name: "", avatarURL: URL(string: ""))
     }
     
     func googleOAuth() async throws {
@@ -76,5 +79,9 @@ class Authentication : ObservableObject {
         GIDSignIn.sharedInstance.signOut()
         try Auth.auth().signOut()
         isLoggedIn = false
+    }
+    func setUserData() {
+        self.userData.avatarURL = Auth.auth().currentUser?.photoURL ?? URL(string: "")
+        self.userData.name = Auth.auth().currentUser?.displayName ?? ""
     }
 }

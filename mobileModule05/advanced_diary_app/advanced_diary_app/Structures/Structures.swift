@@ -17,3 +17,8 @@ struct Notes : Codable, Identifiable {
     var usermail: String
     var style: String
 }
+
+struct UserData : Codable {
+    var name: String
+    var avatarURL: URL?
+}
