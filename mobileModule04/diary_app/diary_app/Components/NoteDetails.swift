@@ -33,8 +33,13 @@ struct NoteDetails: View {
                         Button(action: {
                             if let noteDetails = noteDetails {
                                 Task {
-                                    dataManager.editNote(note: noteDetails)
-                                    onNoteDeleted()
+                                    if !noteDetails.title.isEmpty, !noteDetails.text.isEmpty {
+                                        dataManager.editNote(note: noteDetails)
+                                        onNoteDeleted()
+                                    } else {
+                                        errorMessage = "Fields can't be empty!"
+                                        errorAlert = true
+                                    }
                                 }
                             }
                         }, label: {
