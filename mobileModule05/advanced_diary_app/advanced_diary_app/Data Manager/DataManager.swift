@@ -98,13 +98,13 @@ class DataManager : ObservableObject {
         }
     }
     func getDate() -> String {
-        let currentDate = Date()
-        let dateFormatter = DateFormatter()
+        var selectedDate: DateComponents? = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .medium
-        let formattedDate = dateFormatter.string(from: currentDate)
-        return formattedDate
+        if let selectedDate = selectedDate,
+           let date = Calendar.current.date(from: selectedDate) {
+            return date.formatted(.dateTime.weekday(.wide).day().month(.wide).year())
+        }
+        return ""
     }
     func stringToColor(_ string: String) -> Color {
         switch (string) {

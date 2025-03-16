@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F37F73A82D86C2EE00DA7EF4 /* CalendarView in Frameworks */ = {isa = PBXBuildFile; productRef = F37F73A72D86C2EE00DA7EF4 /* CalendarView */; };
 		F3C6BB312D858BB300B467E0 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F3C6BB302D858BB300B467E0 /* FirebaseAuth */; };
 		F3C6BB332D858BB300B467E0 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = F3C6BB322D858BB300B467E0 /* FirebaseCore */; };
 		F3C6BB352D858BB300B467E0 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F3C6BB342D858BB300B467E0 /* FirebaseDatabase */; };
@@ -41,6 +42,7 @@
 				F3C6BB332D858BB300B467E0 /* FirebaseCore in Frameworks */,
 				F3C6BB392D858BB300B467E0 /* FirebaseStorage in Frameworks */,
 				F3C6BB312D858BB300B467E0 /* FirebaseAuth in Frameworks */,
+				F37F73A82D86C2EE00DA7EF4 /* CalendarView in Frameworks */,
 				F3C6BB3C2D858C6800B467E0 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +94,7 @@
 				F3C6BB3B2D858C6800B467E0 /* GoogleSignIn */,
 				F3C6BB3D2D858C6800B467E0 /* GoogleSignInSwift */,
 				F3C6BB402D858DD000B467E0 /* MasonryStack */,
+				F37F73A72D86C2EE00DA7EF4 /* CalendarView */,
 			);
 			productName = advanced_diary_app;
 			productReference = F3B87D102D858A9600C1AA56 /* advanced_diary_app.app */;
@@ -125,6 +128,7 @@
 				F3C6BB2F2D858BB300B467E0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				F3C6BB3A2D858C6800B467E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				F3C6BB3F2D858DD000B467E0 /* XCRemoteSwiftPackageReference "MasonryStack" */,
+				F37F73A62D86C2EE00DA7EF4 /* XCRemoteSwiftPackageReference "CalendarView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F3B87D112D858A9600C1AA56 /* Products */;
@@ -360,6 +364,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F37F73A62D86C2EE00DA7EF4 /* XCRemoteSwiftPackageReference "CalendarView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AllanJuenemann/CalendarView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.2;
+			};
+		};
 		F3C6BB2F2D858BB300B467E0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -387,6 +399,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F37F73A72D86C2EE00DA7EF4 /* CalendarView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F37F73A62D86C2EE00DA7EF4 /* XCRemoteSwiftPackageReference "CalendarView" */;
+			productName = CalendarView;
+		};
 		F3C6BB302D858BB300B467E0 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F3C6BB2F2D858BB300B467E0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

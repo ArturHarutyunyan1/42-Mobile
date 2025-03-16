@@ -1,32 +1,33 @@
 //
-//  Home.swift
-//  diary_app
+//  CalendarViewModel.swift
+//  advanced_diary_app
 //
-//  Created by Artur Harutyunyan on 12.03.25.
+//  Created by Artur Harutyunyan on 16.03.25.
 //
 
 import SwiftUI
+import CalendarView
 import MasonryStack
 
-struct Home: View {
+struct CalendarViewModel: View {
+    @State private var selectedDate: DateComponents? = Calendar.current.dateComponents([.year, .month, .day], from: Date())
     @EnvironmentObject var dataManager: DataManager
     @StateObject var authenticationManager: Authentication
-    @State private var showPopup = false
     @State private var showDetails = false
     @State private var noteDetails: Notes?
-    var userNotesCount: Int {
-        dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }.count
-    }
     var body: some View {
-        NavigationView {
-            VStack {
-                Navigation(authManager: authenticationManager)
-                ScrollView {
-                    if userNotesCount < 1 {
-                        Text("No recent notes")
-                    } else {
+        GeometryReader {geometry in
+            ScrollView {
+                VStack {
+                    CalendarView(selection: $selectedDate)
+                }
+                VStack {
+                    if let selectedDate = selectedDate,
+                       let date = Calendar.current.date(from: selectedDate) {
+                        let dateString = String(describing: date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
+                        Text("Note entries for \(dateString)")
                         MasonryVStack(columns: 2, spacing: 20) {
-                            ForEach(dataManager.diary.filter { $0.usermail == authenticationManager.userEmail }, id: \.id) { note in
+                            ForEach(dataManager.diary.filter { $0.usermail == authenticationManager.userEmail && $0.date == dateString }, id: \.id) {note in
                                 let color = dataManager.stringToColor(note.style)
                                 let mood = note.feeling.components(separatedBy: " ").first ?? "Mood"
                                 Button(action: {
@@ -57,36 +58,15 @@ struct Home: View {
                                 })
                             }
                         }
-                        .padding(.horizontal)
                     }
                 }
-                Button(action: {
-                    showPopup = true
-                }, label: {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(.white)
-                })
-                .frame(width: 50, height: 50)
-                .background(.red)
-                .cornerRadius(100)
-                .sheet(isPresented: $showPopup) {
-                    Note(auth: authenticationManager, onNoteAdded: {
-                        showPopup = false
-                        dataManager.getNotes()
-                    })
-                }
-                .sheet(isPresented: $showDetails) {
-                    NoteDetails(noteDetails: $noteDetails, onNoteDeleted: {
-                        showDetails = false
-                        dataManager.getNotes()
-                    })
-                }
-                Spacer()
+                .frame(width: geometry.size.width * 0.9)
             }
-            .onAppear() {
-                authenticationManager.setUserData()
+            .sheet(isPresented: $showDetails) {
+                NoteDetails(noteDetails: $noteDetails, onNoteDeleted: {
+                    showDetails = false
+                    dataManager.getNotes()
+                })
             }
         }
     }
